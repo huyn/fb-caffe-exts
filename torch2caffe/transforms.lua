@@ -7,7 +7,7 @@ LICENSE file in the root directory of this source tree. An additional grant
 of patent rights can be found in the PATENTS file in the same directory.
 --]]
 require 'torch'
-local logging = require 'fb.util.logging'
+--local logging = require 'fb.util.logging'
 local M = {}
 
 local function fold_sequential_batch_norm_layer(model)
@@ -22,7 +22,7 @@ local function fold_sequential_batch_norm_layer(model)
                     batch_norm_layer_type = 'nn..*BatchNormalization'
                 end
                 if string.find(layer_type, batch_norm_layer_type) then
-                    logging.infof("Got bn layer: %s, skipping", layer_type)
+                    --logging.infof("Got bn layer: %s, skipping", layer_type)
                     return
                 end
 
@@ -39,7 +39,7 @@ local function fold_sequential_batch_norm_layer(model)
                         M.fold_batch_normalization_layers(model.modules[i]))
                     return
                 end
-                logging.infof("Current: %s, Next: %s", layer_type, next_layer_type)
+                --logging.infof("Current: %s, Next: %s", layer_type, next_layer_type)
                 assert(string.find(layer_type, 'nn.SpatialConvolution')
                            or string.find(layer_type, 'nn.Linear'))
                 local new_module = model.modules[i]:clone()

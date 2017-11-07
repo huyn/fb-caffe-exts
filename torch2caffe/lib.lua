@@ -14,7 +14,7 @@ local pl = require 'pl.import_into'()
 local py = require 'fb.python'
 local torch = require 'torch'
 require 'fbtorch'
-local logging = require 'fb.util.logging'
+--local logging = require 'fb.util.logging'
 local torch_layers = require 'torch2caffe.torch_layers'
 local t2c = py.import('torch2caffe.lib_py')
 
@@ -52,10 +52,7 @@ local function debug_nets(caffe_net, torch_net)
                     sizes = torch.totable(m.output:size())
                     sums = torch.sum(m.output)
                 end
-                logging.infof("Layer %s, %s, Sum: %s",
-                              torch.typename(m),
-                              sizes,
-                              sums)
+                --logging.infof("Layer %s, %s, Sum: %s", torch.typename(m), sizes, sums)
             end
         end
     )
@@ -104,7 +101,7 @@ function M.compare(opts, torch_net)
             torch_outputs = torch_net:forward(torch_inputs)
     end)
     if not ok then
-        logging.infof("Got error running forward: %s", err)
+        --logging.infof("Got error running forward: %s", err)
         torch_net:cuda()
         local torch_inputs = inputs_to_torch_inputs(
             inputs, 'torch.CudaTensor')
@@ -120,25 +117,21 @@ function M.compare(opts, torch_net)
     end
 
     if #caffe_outputs ~= #torch_outputs then
-        logging.errorf("Inconsistent output blobs: Caffe: %s, Torch: %s",
-                       #caffe_outputs, #torch_outputs)
+        --logging.errorf("Inconsistent output blobs: Caffe: %s, Torch: %s", #caffe_outputs, #torch_outputs)
         error("Inconsistent output blobs")
     end
 
     for i = 1,#caffe_outputs do
         local torch_output = torch_outputs[i]
         local caffe_output = caffe_outputs[i]
-        logging.infof("Caffe norm: %s, Torch norm: %s",
-                      torch.norm(caffe_output), torch.norm(torch_output))
+        --logging.infof("Caffe norm: %s, Torch norm: %s", torch.norm(caffe_output), torch.norm(torch_output))
         if not caffe_output:isSameSizeAs(torch_output) then
-            logging.errorf("Inconsistent output size: Caffe: %s, Torch: %s",
-                           caffe_output:size(), torch_output:size())
+            --logging.errorf("Inconsistent output size: Caffe: %s, Torch: %s", caffe_output:size(), torch_output:size())
             error("Inconsistent output sizes")
         end
 
         local max_absolute_error = (caffe_output - torch_output):abs():max()
-        logging.infof("Maximum difference between Caffe and Torch output: %s",
-                      max_absolute_error)
+        --logging.infof("Maximum difference between Caffe and Torch output: %s", max_absolute_error)
         if (max_absolute_error > 0.001) then
             debug_nets(caffe_net, torch_net)
             if os.getenv('LUA_DEBUG_ON_ERROR') then
@@ -170,7 +163,7 @@ function M.run(opts, torch_net)
 end
 
 function M.main(opts)
-    logging.infof("Opts: %s", pl.pretty.write(opts))
+    --logging.infof("Opts: %s", pl.pretty.write(opts))
     if opts.input_tensor ~= "" then
         opts.input_tensor = torch.load(opts.input_tensor)
     else
@@ -200,7 +193,7 @@ function M.main(opts)
         opts.inputs = {{name="data", input_dims=opts.input_dims}}
     end
 
-    logging.infof("Parsed opts: %s", pl.pretty.write(opts))
+    --logging.infof("Parsed opts: %s", pl.pretty.write(opts))
     if opts.verify ~= "" then
         return M.compare(opts, model)
     else

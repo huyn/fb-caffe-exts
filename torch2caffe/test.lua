@@ -8,16 +8,16 @@ of patent rights can be found in the PATENTS file in the same directory.
 --]]
 require 'fb.luaunit'
 local t2c = require 'torch2caffe.lib'
-local logging=  require 'fb.util.logging'
+--local logging=  require 'fb.util.logging'
 Test = {}
 g_SLOW = "" -- set to "" to run slow tests
 
 local fwk
 if pcall(function() require 'cudnn' end) then
-    logging.info("Using `cudnn`")
+    --logging.info("Using `cudnn`")
     fwk = cudnn
 else
-    logging.info("Using `nn`")
+    --logging.info("Using `nn`")
     fwk = nn
 end
 
