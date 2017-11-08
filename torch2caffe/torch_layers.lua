@@ -37,9 +37,13 @@ local function simple(options)
         else
             actual = props
         end
-        return py.eval(net.add_layer(
+ 	print("type name : ", typename)
+	print(bottom_edges)
+        local result =  py.eval(net.add_layer(
             typename, actual, bottom_edges, top_edges,
             num_bottoms, num_tops, inplace))
+	print("after eval : ", bottom_edges)
+	return result
     end
 end
 
@@ -76,18 +80,25 @@ M.CONVERTER = {
     ['nn.ReLU'] = simple{typename='caffe.ReLU', inplace=true},
     ['nn.Threshold'] = simple{typename='caffe.FBThreshold', inplace=true},
     ['nn.Sequential'] = function(net, layer, bottom_edges, top_edges)
-        for i = 1, #layer.modules do
+        print("do nn.Sequential...")
+	for i = 1, #layer.modules do
             local tops = (i == #layer.modules) and top_edges or nil
-            bottom_edges = M.add(net, layer.modules[i], bottom_edges, tops)
-        end
+            print("...In Sequential, execute : ", layer.modules[i], bottom_edges)
+	    bottom_edges = M.add(net, layer.modules[i], bottom_edges, tops)
+            print("...result : ", bottom_edges)
+	end
+	print("after nn.Sequential...", bottom_edges)
         return bottom_edges
     end,
     ['nn.ConcatTable'] = function(net, layer, bottom_edges, top_edges)
         assert(not top_edges or #top_edges == #layer.modules)
         local actual_top_edges = {}
+	print("do nn.ConcatTable...")
         for i = 1, #layer.modules do
             local top_edge = top_edges and {top_edges[i]} or nil
-            top_edge = M.add(net, layer.modules[i], bottom_edges, top_edge)
+            print("in ConcatTable, execute : ", layer.modules[i], top_edge)
+	    top_edge = M.add(net, layer.modules[i], bottom_edges, top_edge)
+	    print("execute result : ", top_edge)
             assert(#top_edge == 1)
             table.insert(actual_top_edges, top_edge[1])
         end
@@ -256,14 +267,33 @@ M.CONVERTER = {
             --end
             return {}
         end},
+    ['nn.LeakyReLU'] = function(net, layer, bottom_edges, top_edges)
+	return bottom_edges
+    end,
+    ['nn.SpatialBatchNormalization'] = function(net, layer, bottom_edges, top_edges)
+	return bottom_edges
+    end,
+    ['nn.SpatialUpSamplingNearest'] = function(net, layer, bottom_edges, top_edges)
+	return bottom_edges
+    end,
+    ['nn.Identity'] = function(net, layer, bottom_edges, top_edges)
+	return bottom_edges
+    end,
+    ['nn.SpatialUpSamplingBilinear'] = function(net, layer, bottom_edges, top_edges)
+	return bottom_edges
+    end,
 }
 
 function M.add(net, layer, bottom_edges, top_edges)
     local layer_type = torch.type(layer)
     for layer_pattern, converter in pairs(M.CONVERTER) do
         if string.find(layer_type, layer_pattern) then
-            return converter(net, layer, bottom_edges, top_edges)
-        end
+	    print("which layer : ", layer_type)
+	    print("bottom_edges value : ", bottom_edges)
+            local result = converter(net, layer, bottom_edges, top_edges)
+            print("after converter : ", bottom_edges)
+	    return result
+	end
     end
     --logging.fatalf("Unknown layer type: %s, known types: %s", layer_type, pl.stringx.join(", ", pl.tablex.keys(M.CONVERTER)))
 end
