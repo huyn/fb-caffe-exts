@@ -67,7 +67,7 @@ class NetBuilder(object):
                   inplace):
         num_tops = None if num_tops is None else int(num_tops)
         num_bottoms = None if num_bottoms is None else int(num_bottoms)
-        bottom_edges = [int(bottom_edge) for bottom_edge in bottom_edges]
+        bottom_edges = None if bottom_edges is None else [int(bottom_edge) for bottom_edge in bottom_edges]
         top_edges = None if top_edges is None else [
             int(top_edge) for top_edge in top_edges]
 
