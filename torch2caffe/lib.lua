@@ -61,6 +61,7 @@ end
 
 function M.compare(opts, torch_net)
     torch_net:apply(function(m) m:evaluate() end)
+    print("compare...1")
     local inputs = {}
     for i=1,#opts.inputs do
         local input_spec = opts.inputs[i]
@@ -73,15 +74,18 @@ function M.compare(opts, torch_net)
         table.insert(inputs, {name=input_spec.name, tensor=tensor})
     end
 
+    print("compare...2")
     -- Legacy code
     if opts.input_tensor then
         assert(inputs[1].name == "data")
         inputs[1].tensor = opts.input_tensor
     end
 
+    print("compare...3")
     local caffe_net = t2c.load(opts)
     local caffe_outputs = M.evaluate_caffe(caffe_net, inputs)
 
+    print("compare...4")
     -- Torch multi-inputs take an ordered Table.
     local function inputs_to_torch_inputs(inputs, type)
         if #inputs == 1 then
@@ -94,6 +98,7 @@ function M.compare(opts, torch_net)
         return tensors
     end
     local torch_outputs
+    print("compare...5")
     -- Some networks only accept CUDA input.
     local ok, err = pcall(function()
             torch_net:float()
@@ -101,6 +106,7 @@ function M.compare(opts, torch_net)
                 inputs, 'torch.FloatTensor')
             torch_outputs = torch_net:forward(torch_inputs)
     end)
+    print("compare...6")
     if not ok then
         --logging.infof("Got error running forward: %s", err)
         torch_net:cuda()
@@ -109,6 +115,7 @@ function M.compare(opts, torch_net)
         torch_outputs = torch_net:forward(torch_inputs)
     end
 
+    print("compare...7")
     if type(torch_outputs) == "table" then
         for i=1,#torch_outputs do
             torch_outputs[i] = torch_outputs[i]:float()
@@ -117,12 +124,14 @@ function M.compare(opts, torch_net)
         torch_outputs = {torch_outputs:float()}
     end
 
+    print("compare...8")
     if #caffe_outputs ~= #torch_outputs then
         --logging.errorf("Inconsistent output blobs: Caffe: %s, Torch: %s", #caffe_outputs, #torch_outputs)
         error(string.format("Inconsistent output blobs: Caffe: %s, Torch: %s", #caffe_outputs, #torch_outputs))
         error("Inconsistent output blobs")
     end
 
+    print("compare...9")
     for i = 1,#caffe_outputs do
         local torch_output = torch_outputs[i]
         local caffe_output = caffe_outputs[i]
@@ -145,6 +154,7 @@ function M.compare(opts, torch_net)
             error("Error in conversion!")
         end
     end
+    print("compare...10")
     if os.getenv('LUA_DEBUG_ON_ERROR') then
         require('fb.debugger').enter()
     end
@@ -154,14 +164,7 @@ function M.convert(opts, torch_net)
     assert(opts)
     assert(torch_net)
     local net_builder = py.reval(t2c.initialize())
-    print("net_builder:")
-    print(net_builder)
-    local temp_bottom = t2c.setup_inputs(opts, net_builder)
-    print("bottom_edges:")
-    print(temp_bottom)
-    local bottom_edges = py.eval(temp_bottom)
-    print("py value:")
-    print(bottom_edges)
+    local bottom_edges = py.eval(t2c.setup_inputs(opts, net_builder))
     local top_edges = py.eval(t2c.setup_outputs(opts, net_builder))
     torch_layers.add(net_builder, torch_net, bottom_edges, top_edges)
     t2c.finalize(opts, net_builder)
