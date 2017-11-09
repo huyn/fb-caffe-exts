@@ -173,30 +173,37 @@ def deconvolution(torch_layer):
 
     layer = pb2.LayerParameter()
     layer.type = "Deconvolution"
-    weight = torch_layer["weight"]
-    bias = torch_layer["bias"]
-    assert len(weight.shape) == 4, weight.shape
-    (nOutputPlane, nInputPlane, kH_, kW_) = weight.shape
+    factor = int(torch_layer["scale_factor"])
+    layer.convolution_param.stride = factor
+    layer.convolution_param.kernel_size = (2 * factor - factor % 2)
+    layer.convolution_param.pad = int(np.ceil((factor - 1) / 2.))
+    layer.convolution_param.weight_filler = {'type': 'bilinear'}
+    layer.convolution_param.bias_term = 'false'
 
-    (kW, kH, dW, dH, padW, padH) = [
-        int(torch_layer.get(f, 0))
-        for f in ["kW", "kH", "dW", "dH", "padW", "padH"]]
-    assert kH_ == kH
-    assert kW_ == kW
-    layer.convolution_param.num_output = nOutputPlane
-    layer.convolution_param.kernel_w = kW
-    layer.convolution_param.stride_w = dW
-    layer.convolution_param.pad_w = padW
-    layer.convolution_param.kernel_h = kH
-    layer.convolution_param.stride_h = dH
-    layer.convolution_param.pad_h = padH
-
-    if "bias" in torch_layer:
-        bias = torch_layer["bias"]
-        layer.blobs.extend([as_blob(weight), as_blob(bias)])
-    else:
-        layer.convolution_param.bias_term = False
-        layer.blobs.extend([as_blob(weight), as_blob(bias)])
+    # weight = torch_layer["weight"]
+    # bias = torch_layer["bias"]
+    # assert len(weight.shape) == 4, weight.shape
+    # (nOutputPlane, nInputPlane, kH_, kW_) = weight.shape
+    #
+    # (kW, kH, dW, dH, padW, padH) = [
+    #     int(torch_layer.get(f, 0))
+    #     for f in ["kW", "kH", "dW", "dH", "padW", "padH"]]
+    # assert kH_ == kH
+    # assert kW_ == kW
+    # layer.convolution_param.num_output = nOutputPlane
+    # layer.convolution_param.kernel_w = kW
+    # layer.convolution_param.stride_w = dW
+    # layer.convolution_param.pad_w = padW
+    # layer.convolution_param.kernel_h = kH
+    # layer.convolution_param.stride_h = dH
+    # layer.convolution_param.pad_h = padH
+    #
+    # if "bias" in torch_layer:
+    #     bias = torch_layer["bias"]
+    #     layer.blobs.extend([as_blob(weight), as_blob(bias)])
+    # else:
+    #     layer.convolution_param.bias_term = False
+    #     layer.blobs.extend([as_blob(weight), as_blob(bias)])
     return layer
 
 
