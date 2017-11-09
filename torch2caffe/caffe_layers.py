@@ -19,6 +19,15 @@ import numpy as np
 import caffe
 import caffe.proto.caffe_pb2 as pb2
 
+import sys
+def print_all(obj):
+    modulelist = dir(obj)
+    length = len(modulelist)
+    print('=================print_all...start')
+    for i in range(0,length,1):
+        print(modulelist[i])
+    print('=================print_all...end')
+
 log = logging.getLogger(__name__)
 
 
@@ -158,6 +167,7 @@ def spatial_convolution(torch_layer):
 def deconvolution(torch_layer):
     log.info("do deconvolution")
     log.info(torch_layer)
+    print_all(torch_layer)
 
     layer = pb2.LayerParameter()
     layer.type = "Deconvolution"
