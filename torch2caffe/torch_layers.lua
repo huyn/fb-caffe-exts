@@ -81,24 +81,24 @@ M.CONVERTER = {
     ['nn.Threshold'] = simple{typename='caffe.FBThreshold', inplace=true},
     ['nn.Sequential'] = function(net, layer, bottom_edges, top_edges)
         print("do nn.Sequential...")
-	for i = 1, #layer.modules do
+        for i = 1, #layer.modules do
             local tops = (i == #layer.modules) and top_edges or nil
             print("...In Sequential, execute : ", layer.modules[i], bottom_edges)
-	    bottom_edges = M.add(net, layer.modules[i], bottom_edges, tops)
+            bottom_edges = M.add(net, layer.modules[i], bottom_edges, tops)
             print("...result : ", bottom_edges)
-	end
-	print("after nn.Sequential...", bottom_edges)
+        end
+        print("after nn.Sequential...", bottom_edges)
         return bottom_edges
     end,
     ['nn.ConcatTable'] = function(net, layer, bottom_edges, top_edges)
         assert(not top_edges or #top_edges == #layer.modules)
         local actual_top_edges = {}
-	print("do nn.ConcatTable...")
+	    print("do nn.ConcatTable...")
         for i = 1, #layer.modules do
             local top_edge = top_edges and {top_edges[i]} or nil
-            print("in ConcatTable, execute : ", layer.modules[i], top_edge)
-	    top_edge = M.add(net, layer.modules[i], bottom_edges, top_edge)
-	    print("execute result : ", top_edge)
+            -- print("in ConcatTable, execute : ", layer.modules[i], top_edge)
+	        top_edge = M.add(net, layer.modules[i], bottom_edges, top_edge)
+	        print("execute result : ", top_edge)
             assert(#top_edge == 1)
             table.insert(actual_top_edges, top_edge[1])
         end
