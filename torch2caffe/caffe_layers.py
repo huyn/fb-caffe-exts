@@ -266,7 +266,7 @@ def batchnorm(torch_layer):
     layer = pb2.LayerParameter()
     layer.type = "BatchNorm"
     # Caffe BN doesn't support bias
-    assert torch_layer["affine"]==0
+    # assert torch_layer["affine"]==0
     layer.batch_norm_param.use_global_stats = 1
     blobs_weight = np.ones(1)
     layer.blobs.extend([as_blob(torch_layer["running_mean"]),
