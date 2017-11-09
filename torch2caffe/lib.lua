@@ -171,6 +171,7 @@ end
 function M.convert(opts, torch_net)
     assert(opts)
     assert(torch_net)
+    torch_net:float() -- convert the model to a CPU-only model
     local net_builder = py.reval(t2c.initialize())
     local bottom_edges = py.eval(t2c.setup_inputs(opts, net_builder))
     local top_edges = py.eval(t2c.setup_outputs(opts, net_builder))
