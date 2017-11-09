@@ -28,6 +28,7 @@ def print_all(obj):
         print(modulelist[i])
     print('=================print_all...end')
 
+
 log = logging.getLogger(__name__)
 
 
@@ -167,7 +168,8 @@ def spatial_convolution(torch_layer):
 def deconvolution(torch_layer):
     log.info("do deconvolution")
     log.info(torch_layer)
-    print_all(torch_layer)
+    print_all(torch_layer["output"])
+    print_all(torch_layer["gradInput"])
 
     layer = pb2.LayerParameter()
     layer.type = "Deconvolution"
