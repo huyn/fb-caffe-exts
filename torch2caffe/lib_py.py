@@ -66,7 +66,7 @@ class NetBuilder(object):
                   num_bottoms,
                   num_tops,
                   inplace):
-        if typename == 'caffe.SpatialUpSamplingNearest':
+        if typename == 'caffe.SpatialUpSamplingNearest' or typename == 'caffe.LeRU':
             log.info(torch_layer)
             assert torch_layer is None
 
