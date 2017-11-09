@@ -24,9 +24,15 @@ function M.evaluate_caffe(caffe_net, inputs)
         local input_spec = inputs[i]
         input_kwargs[input_spec.name] = input_spec.tensor
     end
+    print("start forward caffe")
+    print(input_kwargs)
     local py_caffe_output = caffe_net.forward(py.kwargs, input_kwargs)
+    print("start to reval output")
     local caffe_output_list = py.reval(t2c.format_output(py_caffe_output))
+    print("start to val outputlist")
     local caffe_output_length = py.eval("len(a)", {a=caffe_output_list})
+    print("val output success")
+    print(caffe_output_length)
     local caffe_outputs = {}
     for i=0,caffe_output_length-1 do
         table.insert(caffe_outputs,
@@ -83,6 +89,7 @@ function M.compare(opts, torch_net)
 
     print("compare...3")
     local caffe_net = t2c.load(opts)
+    print(inputs)
     local caffe_outputs = M.evaluate_caffe(caffe_net, inputs)
 
     print("compare...4")
