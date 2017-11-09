@@ -136,6 +136,9 @@ def temporal_convolution(torch_layer):
 
 
 def spatial_convolution(torch_layer):
+    log.info("do spatial deconvolution")
+    log.info(torch_layer)
+
     layer = pb2.LayerParameter()
     layer.type = "Convolution"
     bias = torch_layer["bias"]
@@ -146,8 +149,8 @@ def spatial_convolution(torch_layer):
     (kW, kH, dW, dH, padW, padH) = [
         int(torch_layer.get(f, 0))
         for f in ["kW", "kH", "dW", "dH", "padW", "padH"]]
-    assert kH_ == kH
-    assert kW_ == kW
+    assert kH_ != kH
+    assert kW_ != kW
     layer.convolution_param.num_output = nOutputPlane
     layer.convolution_param.kernel_w = kW
     layer.convolution_param.stride_w = dW
