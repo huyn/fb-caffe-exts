@@ -174,6 +174,11 @@ def deconvolution(torch_layer):
     print_all(torch_layer["gradInput"])
 
     output = torch_layer["output"]
+    gradinput = torch_layer["gradInput"]
+    print(len(output))
+    print(len(gradinput))
+    print(output[0].size[1])
+    print(gradinput[0].size[1])
     assert torch_layer is None
 
     layer = pb2.LayerParameter()
@@ -181,7 +186,7 @@ def deconvolution(torch_layer):
     factor = int(torch_layer["scale_factor"])
     # layer.convolution_param.stride = factor
     # layer.convolution_param.kernel_size = (2 * factor - factor % 2)
-    # layer.convolution_param.num_output = 1
+    layer.convolution_param.num_output = output.size()
     layer.convolution_param.stride_w = factor
     layer.convolution_param.stride_h = factor
     layer.convolution_param.kernel_w = (2 * factor - factor % 2)
