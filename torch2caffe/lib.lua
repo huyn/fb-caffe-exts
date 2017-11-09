@@ -89,6 +89,7 @@ function M.compare(opts, torch_net)
 
     print("compare...3")
     local caffe_net = t2c.load(opts)
+    print("compare...3 result")
     print(inputs)
     local caffe_outputs = M.evaluate_caffe(caffe_net, inputs)
 
