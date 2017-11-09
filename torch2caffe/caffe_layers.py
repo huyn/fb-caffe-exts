@@ -154,7 +154,11 @@ def spatial_convolution(torch_layer):
         layer.blobs.extend([as_blob(weight), as_blob(bias)])
     return layer
 
+
 def deconvolution(torch_layer):
+    log.info("do deconvolution")
+    log.info(torch_layer)
+
     layer = pb2.LayerParameter()
     layer.type = "Deconvolution"
     bias = torch_layer["bias"]
@@ -251,6 +255,7 @@ def get_lstm_blobs(torch_layer):
         return {
             k.replace(suffix, ""): v for k, v in layers.iteritems()
             if k.endswith(suffix)}
+
     ih_linear = filtered(IH_LINEAR)
     hh_linear = filtered(HH_LINEAR)
     ch_cmul = filtered(CH_CMUL)
@@ -291,6 +296,7 @@ def softmax(opts):
     assert softmax_ty in ["Softmax", "FBSoftmax"], opts
     return ty(softmax_ty)
 
+
 def batchnorm(torch_layer):
     layer = pb2.LayerParameter()
     layer.type = "BatchNorm"
@@ -299,8 +305,9 @@ def batchnorm(torch_layer):
     layer.batch_norm_param.use_global_stats = 1
     blobs_weight = np.ones(1)
     layer.blobs.extend([as_blob(torch_layer["running_mean"]),
-        as_blob(torch_layer["running_var"]), as_blob(blobs_weight)])
+                        as_blob(torch_layer["running_var"]), as_blob(blobs_weight)])
     return layer
+
 
 def build_converter(opts):
     return {

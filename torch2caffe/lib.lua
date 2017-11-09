@@ -14,7 +14,6 @@ local pl = require 'pl.import_into'()
 local py = require 'fb.python'
 local torch = require 'torch'
 require 'fbtorch'
---local logging = require 'fb.util.logging'
 local torch_layers = require 'torch2caffe.torch_layers'
 local t2c = py.import('torch2caffe.lib_py')
 
@@ -59,7 +58,7 @@ local function debug_nets(caffe_net, torch_net)
                     sums = torch.sum(m.output)
                 end
                 --logging.infof("Layer %s, %s, Sum: %s", torch.typename(m), sizes, sums)
-                print("Layer %s, %s, Sum: %s", torch.typename(m), sizes, sums)
+                print(("Layer %s, %s, Sum: %s").format(torch.typename(m), sizes, sums))
             end
         end
     )
@@ -117,6 +116,7 @@ function M.compare(opts, torch_net)
     print("compare...6")
     if not ok then
         --logging.infof("Got error running forward: %s", err)
+        print(("Got error running forward: %s").format(err))
         torch_net:cuda()
         local torch_inputs = inputs_to_torch_inputs(
             inputs, 'torch.CudaTensor')
@@ -153,7 +153,7 @@ function M.compare(opts, torch_net)
 
         local max_absolute_error = (caffe_output - torch_output):abs():max()
         --logging.infof("Maximum difference between Caffe and Torch output: %s", max_absolute_error)
-        print("Maximum difference between Caffe and Torch output: %s", max_absolute_error)
+        print(("Maximum difference between Caffe and Torch output: %s").format(max_absolute_error))
         if (max_absolute_error > 0.001) then
             debug_nets(caffe_net, torch_net)
             if os.getenv('LUA_DEBUG_ON_ERROR') then
@@ -171,7 +171,7 @@ end
 function M.convert(opts, torch_net)
     assert(opts)
     assert(torch_net)
-    torch_net:float() -- convert the model to a CPU-only model
+    -- torch_net:float() -- convert the model to a CPU-only model
     local net_builder = py.reval(t2c.initialize())
     local bottom_edges = py.eval(t2c.setup_inputs(opts, net_builder))
     local top_edges = py.eval(t2c.setup_outputs(opts, net_builder))
@@ -221,7 +221,7 @@ function M.main(opts)
     end
 
     --logging.infof("Parsed opts: %s", pl.pretty.write(opts))
-    print("Parsed opts: %s", pl.pretty.write(opts))
+    print(("Parsed opts: %s").format(pl.pretty.write(opts)))
     if opts.verify ~= "" then
         return M.compare(opts, model)
     else
