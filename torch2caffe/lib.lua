@@ -213,8 +213,10 @@ function M.main(opts)
         model = g_t2c_preprocess(model, opts)
     end
 
+    local dims = {"1", "3", "32", "32"}
     if not opts.inputs then
-        opts.inputs = {{name="data", input_dims=opts.input_dims}}
+        -- opts.inputs = {{name="data", input_dims=opts.input_dims}}
+        opts.inputs = {{name="data", input_dims=dims}}
     end
 
     --logging.infof("Parsed opts: %s", pl.pretty.write(opts))

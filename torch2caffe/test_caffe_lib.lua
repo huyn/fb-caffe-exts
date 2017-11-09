@@ -16,12 +16,10 @@ require 'fbtorch'
 local t2c = py.import('torch2caffe.lib_py')
 
 function M.main(opts)
-    --logging.infof("Opts: %s", pl.pretty.write(opts))
     print(("Opts: %s"):format(pl.pretty.write(opts)))
 
     local caffe_net = t2c.load(opts)
     print("compare...3")
-
 end
 
 return M
