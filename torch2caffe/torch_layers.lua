@@ -267,7 +267,7 @@ M.CONVERTER = {
             --end
             return {}
         end},
-    ['nn.LeakyReLU'] = simple{typename='caffe.LeakyReLU', inplace=true},
+    ['nn.LeakyReLU'] = simple{typename='caffe.ReLU', inplace=true},
     ['nn.SpatialBatchNormalization'] = simple{typename='caffe.BatchNorm'},
     ['nn.SpatialUpSamplingNearest'] = function(net, layer, bottom_edges, top_edges)
 	    return bottom_edges
