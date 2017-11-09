@@ -23,10 +23,10 @@ log = logging.getLogger(__name__)
 
 
 def as_blob(array):
-    # blob = pb2.BlobProto()
-    # blob.shape.dim.extend(array.shape)
-    # blob.data.extend(array.astype(float).flat)
-    return caffe.io.array_to_blobproto(array)
+    blob = pb2.BlobProto()
+    blob.shape.dim.extend(array.shape)
+    blob.data.extend(array.astype(float).flat)
+    # return caffe.io.array_to_blobproto(array)
 
 
 def ty(caffe_type):
