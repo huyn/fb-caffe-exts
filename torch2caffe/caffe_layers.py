@@ -16,10 +16,10 @@ import os
 
 import numpy as np
 
-import caffe
+# import caffe
 import caffe.proto.caffe_pb2 as pb2
 
-import sys
+# import sys
 def print_all(obj):
     modulelist = dir(obj)
     length = len(modulelist)
@@ -168,13 +168,13 @@ def spatial_convolution(torch_layer):
 def deconvolution(torch_layer):
     log.info("do deconvolution")
     log.info(torch_layer)
-    print_all(torch_layer["output"])
-    print_all(torch_layer["gradInput"])
+    # print_all(torch_layer["output"])
+    # print_all(torch_layer["gradInput"])
 
     layer = pb2.LayerParameter()
     layer.type = "Deconvolution"
-    bias = torch_layer["bias"]
     weight = torch_layer["weight"]
+    bias = torch_layer["bias"]
     assert len(weight.shape) == 4, weight.shape
     (nOutputPlane, nInputPlane, kH_, kW_) = weight.shape
 
