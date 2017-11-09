@@ -37,13 +37,13 @@ local function simple(options)
         else
             actual = props
         end
- 	print("type name : ", typename)
-	print(bottom_edges)
+ 	    print("type name : ", typename)
+	    print(bottom_edges)
         local result =  py.eval(net.add_layer(
             typename, actual, bottom_edges, top_edges,
             num_bottoms, num_tops, inplace))
-	print("after eval : ", bottom_edges)
-	return result
+	    print("after eval : ", bottom_edges)
+	    return result
     end
 end
 

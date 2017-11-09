@@ -66,20 +66,22 @@ class NetBuilder(object):
                   num_bottoms,
                   num_tops,
                   inplace):
+        log.info(torch_layer)
+        assert torch_layer is None
+
         log.info(bottom_edges)
-	if bottom_edges is None:
-	    log.info('bottom_edge is none')
-	if bottom_edges == None:
-	    log.info('bottom_edge == None')
-	num_tops = None if num_tops is None else int(num_tops)
+        if bottom_edges is None:
+            log.info('bottom_edge is none')
+        if bottom_edges == None:
+            log.info('bottom_edge == None')
+        num_tops = None if num_tops is None else int(num_tops)
         num_bottoms = None if num_bottoms is None else int(num_bottoms)
         bottom_edges = None if bottom_edges is None else [int(bottom_edge) for bottom_edge in bottom_edges]
-	log.info('new bottom_edges')
-	log.info(bottom_edges)
-	top_edges = None if top_edges is None else [
-            int(top_edge) for top_edge in top_edges]
+        log.info('new bottom_edges')
+        log.info(bottom_edges)
+        top_edges = None if top_edges is None else [int(top_edge) for top_edge in top_edges]
 
-	layername = self._new_layer_name(torch_layer, typename)
+        layername = self._new_layer_name(torch_layer, typename)
         assert num_bottoms is None or num_bottoms == len(bottom_edges), (
             'Invalid number of inputs for %s. Got %d, needs %d.' % (
                 layername, len(bottom_edges), num_bottoms))
