@@ -148,18 +148,7 @@ def spatial_convolution(torch_layer):
 
     if "bias" in torch_layer:
         bias = torch_layer["bias"]
-        log.info("print weight")
-        log.info(weight)
-        log.info("print bis")
-        log.info(bias)
-        weight_blob = as_blob(weight);
-        bias_blob = as_blob(bias)
-        log.info("print blobbed weight")
-        log.info(weight_blob)
-        log.info("print blobbed bias")
-        log.info(bias_blob)
-        layer.blobs.extend(weight_blob, bias_blob)
-        # layer.blobs.extend([as_blob(weight), as_blob(bias)])
+        layer.blobs.extend([as_blob(weight), as_blob(bias)])
     else:
         layer.convolution_param.bias_term = False
         layer.blobs.extend([as_blob(weight), as_blob(bias)])
