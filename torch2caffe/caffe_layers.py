@@ -154,6 +154,35 @@ def spatial_convolution(torch_layer):
         layer.blobs.extend([as_blob(weight), as_blob(bias)])
     return layer
 
+def deconvolution(torch_layer):
+    layer = pb2.LayerParameter()
+    layer.type = "Deconvolution"
+    bias = torch_layer["bias"]
+    weight = torch_layer["weight"]
+    assert len(weight.shape) == 4, weight.shape
+    (nOutputPlane, nInputPlane, kH_, kW_) = weight.shape
+
+    (kW, kH, dW, dH, padW, padH) = [
+        int(torch_layer.get(f, 0))
+        for f in ["kW", "kH", "dW", "dH", "padW", "padH"]]
+    assert kH_ == kH
+    assert kW_ == kW
+    layer.convolution_param.num_output = nOutputPlane
+    layer.convolution_param.kernel_w = kW
+    layer.convolution_param.stride_w = dW
+    layer.convolution_param.pad_w = padW
+    layer.convolution_param.kernel_h = kH
+    layer.convolution_param.stride_h = dH
+    layer.convolution_param.pad_h = padH
+
+    if "bias" in torch_layer:
+        bias = torch_layer["bias"]
+        layer.blobs.extend([as_blob(weight), as_blob(bias)])
+    else:
+        layer.convolution_param.bias_term = False
+        layer.blobs.extend([as_blob(weight), as_blob(bias)])
+    return layer
+
 
 def pooling(torch_layer):
     layer = pb2.LayerParameter()
@@ -295,6 +324,8 @@ def build_converter(opts):
         'caffe.FBThreshold': fbthreshold,
         'caffe.LSTM': lstm,
         'caffe.BatchNorm': batchnorm,
+        'caffe.SpatialUpSamplingNearest': deconvolution,
+        'caffe.SpatialUpSamplingBilinear': deconvolution,
     }
 
 
