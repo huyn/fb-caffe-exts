@@ -23,7 +23,10 @@ log = logging.getLogger(__name__)
 
 
 def as_blob(array):
-    return caffe.io.array_to_blobproto(array)
+    blob = pb2.BlobProto()
+    blob.shape.dim.extend(array.shape)
+    blob.data.extend(array.astype(float).flat)
+    # return caffe.io.array_to_blobproto(array)
 
 
 def ty(caffe_type):
@@ -84,8 +87,12 @@ def inner_product(torch_layer):
     layer.inner_product_param.num_output = num_output
 
     # Last layer.
-    layer.inner_product_param.axis = -1
-    layer.blobs.extend([as_blob(weight), as_blob(bias)])
+    if "bias" in torch_layer:
+        bias = torch_layer["bias"]
+        layer.blobs.extend([as_blob(weight), as_blob(bias)])
+    else:
+        layer.inner_product_param.axis = -1
+        layer.blobs.extend([as_blob(weight), as_blob(bias)])
     return layer
 
 
@@ -138,7 +145,12 @@ def spatial_convolution(torch_layer):
     layer.convolution_param.stride_h = dH
     layer.convolution_param.pad_h = padH
 
-    layer.blobs.extend([as_blob(weight), as_blob(bias)])
+    if "bias" in torch_layer:
+        bias = torch_layer["bias"]
+        layer.blobs.extend([as_blob(weight), as_blob(bias)])
+    else:
+        layer.convolution_param.bias_term = False
+        layer.blobs.extend([as_blob(weight), as_blob(bias)])
     return layer
 
 
@@ -164,7 +176,11 @@ def pooling(torch_layer):
         return layer
 
     if not torch_layer["ceil_mode"]:
-        layer.pooling_param.torch_pooling = True
+        # layer.pooling_param.torch_pooling = True
+        if dH > 1 and padH > 0:
+            layer.pooling_param.pad_h = padH - 1
+        if dW > 1 and padW > 0:
+            layer.pooling_param.pad_w = padW - 1
     return layer
 
 
@@ -245,6 +261,16 @@ def softmax(opts):
     assert softmax_ty in ["Softmax", "FBSoftmax"], opts
     return ty(softmax_ty)
 
+def batchnorm(torch_layer):
+    layer = pb2.LayerParameter()
+    layer.type = "BatchNorm"
+    # Caffe BN doesn't support bias
+    assert torch_layer["affine"]==0
+    layer.batch_norm_param.use_global_stats = 1
+    blobs_weight = np.ones(1)
+    layer.blobs.extend([as_blob(torch_layer["running_mean"]),
+        as_blob(torch_layer["running_var"]), as_blob(blobs_weight)])
+    return layer
 
 def build_converter(opts):
     return {
@@ -255,6 +281,7 @@ def build_converter(opts):
         'caffe.Log': ty('Log'),
         'caffe.LogSoftmax': ty('LogSoftmax'),
         'caffe.ReLU': ty('ReLU'),
+        'caffe.LeakyReLU': ty('LeakyReLU'),
         'caffe.Reduction': reduction,
         'caffe.Slice': slice,
         'caffe.Softmax': softmax(opts),
@@ -266,6 +293,7 @@ def build_converter(opts):
         'caffe.Flatten': ty('Flatten'),
         'caffe.FBThreshold': fbthreshold,
         'caffe.LSTM': lstm,
+        'caffe.BatchNorm': batchnorm,
     }
 
 

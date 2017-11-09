@@ -23,6 +23,7 @@ local function fold_sequential_batch_norm_layer(model)
                 end
                 if string.find(layer_type, batch_norm_layer_type) then
                     --logging.infof("Got bn layer: %s, skipping", layer_type)
+                    print(("Got bn layer: %s, skipping"):format(layer_type))
                     return
                 end
 
@@ -40,6 +41,7 @@ local function fold_sequential_batch_norm_layer(model)
                     return
                 end
                 --logging.infof("Current: %s, Next: %s", layer_type, next_layer_type)
+                print(("Current: %s, Next: %s"):format(layer_type, next_layer_type))
                 assert(string.find(layer_type, 'nn.SpatialConvolution')
                            or string.find(layer_type, 'nn.Linear'))
                 local new_module = model.modules[i]:clone()
@@ -47,7 +49,9 @@ local function fold_sequential_batch_norm_layer(model)
                 assert(bn_layer.running_mean)
                 assert(bn_layer.running_std)
                 local mean = bn_layer.running_mean
-                local std = bn_layer.running_std
+                local var = bn_layer.running_var
+                local std = var:add(bn_layer.eps):pow(-0.5)
+                -- local std = bn_layer.running_std
                 local a2 = bn_layer.weight
                 local b2 = bn_layer.bias
                 local sz = new_module.weight:size()
@@ -57,7 +61,13 @@ local function fold_sequential_batch_norm_layer(model)
                 -- ((a * x + b) - m) * std => a * std * x + (b-m) * std
                 new_module.bias:add(-1, mean)
                 new_module.bias:cmul(std)
-                local buf = torch.repeatTensor(std:view(nc, 1), sz)
+                -- local buf = torch.repeatTensor(std:view(nc, 1), sz)
+                local buf = nil
+                if new_module.weight:dim() == 4 then
+                    buf = torch.repeatTensor(std:view(nc, 1, 1, 1), sz)
+                elseif new_module.weight:dim() == 2 then
+                    buf = torch.repeatTensor(std:view(nc, 1), sz)
+                end
                 new_module.weight:cmul(buf)
                 mean:zero()
                 std:fill(1)
@@ -66,7 +76,12 @@ local function fold_sequential_batch_norm_layer(model)
                     -- a2 * (a1 * x + b1) + b2 => a2 * a1 * x + a2 * b1 + b2
                     new_module.bias:cmul(a2)
                     new_module.bias:add(b2)
-                    buf = torch.repeatTensor(a2:view(nc, 1), sz)
+                    -- buf = torch.repeatTensor(a2:view(nc, 1), sz)
+                    if new_module.weight:dim() == 4 then
+                        buf = torch.repeatTensor(a2:view(nc, 1, 1, 1), sz)
+                    elseif new_module.weight:dim() == 2 then
+                        buf = torch.repeatTensor(a2:view(nc, 1), sz)
+                    end
                     new_module.weight:cmul(buf)
                     a2:fill(1)
                     b2:zero()

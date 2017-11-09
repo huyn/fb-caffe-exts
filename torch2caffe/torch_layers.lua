@@ -267,20 +267,16 @@ M.CONVERTER = {
             --end
             return {}
         end},
-    ['nn.LeakyReLU'] = function(net, layer, bottom_edges, top_edges)
-	return bottom_edges
-    end,
-    ['nn.SpatialBatchNormalization'] = function(net, layer, bottom_edges, top_edges)
-	return bottom_edges
-    end,
+    ['nn.LeakyReLU'] = simple{typename='caffe.LeakyReLU', inplace=true},
+    ['nn.SpatialBatchNormalization'] = simple{typename='caffe.BatchNorm'},
     ['nn.SpatialUpSamplingNearest'] = function(net, layer, bottom_edges, top_edges)
-	return bottom_edges
+	    return bottom_edges
     end,
     ['nn.Identity'] = function(net, layer, bottom_edges, top_edges)
-	return bottom_edges
+	    return bottom_edges
     end,
     ['nn.SpatialUpSamplingBilinear'] = function(net, layer, bottom_edges, top_edges)
-	return bottom_edges
+	    return bottom_edges
     end,
 }
 
@@ -288,13 +284,16 @@ function M.add(net, layer, bottom_edges, top_edges)
     local layer_type = torch.type(layer)
     for layer_pattern, converter in pairs(M.CONVERTER) do
         if string.find(layer_type, layer_pattern) then
-	    print("which layer : ", layer_type)
-	    print("bottom_edges value : ", bottom_edges)
+	        print("which layer : ", layer_type)
+	        print("bottom_edges value : ", bottom_edges)
             local result = converter(net, layer, bottom_edges, top_edges)
             print("after converter : ", bottom_edges)
 	    return result
-	end
+	    end
     end
+    error(("Unknown layer type: %s, known types: %s"):format(
+                   layer_type,
+                   pl.stringx.join(", ", pl.tablex.keys(M.CONVERTER))))
     --logging.fatalf("Unknown layer type: %s, known types: %s", layer_type, pl.stringx.join(", ", pl.tablex.keys(M.CONVERTER)))
 end
 

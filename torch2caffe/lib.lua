@@ -53,6 +53,7 @@ local function debug_nets(caffe_net, torch_net)
                     sums = torch.sum(m.output)
                 end
                 --logging.infof("Layer %s, %s, Sum: %s", torch.typename(m), sizes, sums)
+                print("Layer %s, %s, Sum: %s", torch.typename(m), sizes, sums)
             end
         end
     )
@@ -118,6 +119,7 @@ function M.compare(opts, torch_net)
 
     if #caffe_outputs ~= #torch_outputs then
         --logging.errorf("Inconsistent output blobs: Caffe: %s, Torch: %s", #caffe_outputs, #torch_outputs)
+        error(string.format("Inconsistent output blobs: Caffe: %s, Torch: %s", #caffe_outputs, #torch_outputs))
         error("Inconsistent output blobs")
     end
 
@@ -125,13 +127,16 @@ function M.compare(opts, torch_net)
         local torch_output = torch_outputs[i]
         local caffe_output = caffe_outputs[i]
         --logging.infof("Caffe norm: %s, Torch norm: %s", torch.norm(caffe_output), torch.norm(torch_output))
+        print("Caffe norm: %s, Torch norm: %s", torch.norm(caffe_output), torch.norm(torch_output))
         if not caffe_output:isSameSizeAs(torch_output) then
             --logging.errorf("Inconsistent output size: Caffe: %s, Torch: %s", caffe_output:size(), torch_output:size())
+            error(string.format("Inconsistent output size: Caffe: %s, Torch: %s", caffe_output:size(), torch_output:size()))
             error("Inconsistent output sizes")
         end
 
         local max_absolute_error = (caffe_output - torch_output):abs():max()
         --logging.infof("Maximum difference between Caffe and Torch output: %s", max_absolute_error)
+        print("Maximum difference between Caffe and Torch output: %s", max_absolute_error)
         if (max_absolute_error > 0.001) then
             debug_nets(caffe_net, torch_net)
             if os.getenv('LUA_DEBUG_ON_ERROR') then
@@ -171,6 +176,7 @@ end
 
 function M.main(opts)
     --logging.infof("Opts: %s", pl.pretty.write(opts))
+    print(("Opts: %s"):format(pl.pretty.write(opts)))
     if opts.input_tensor ~= "" then
         opts.input_tensor = torch.load(opts.input_tensor)
     else
@@ -201,6 +207,7 @@ function M.main(opts)
     end
 
     --logging.infof("Parsed opts: %s", pl.pretty.write(opts))
+    print("Parsed opts: %s", pl.pretty.write(opts))
     if opts.verify ~= "" then
         return M.compare(opts, model)
     else
