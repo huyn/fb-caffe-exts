@@ -174,7 +174,7 @@ def deconvolution(torch_layer):
     print_all(torch_layer["gradInput"])
 
     output = torch_layer["output"]
-    assert torch_layer is not None
+    assert torch_layer is None
 
     layer = pb2.LayerParameter()
     layer.type = "Deconvolution"
