@@ -136,9 +136,8 @@ def temporal_convolution(torch_layer):
 
 
 def spatial_convolution(torch_layer):
-    log.info("do spatial deconvolution")
-    log.info(torch_layer)
-
+    # log.info("do spatial deconvolution")
+    # log.info(torch_layer)
     layer = pb2.LayerParameter()
     layer.type = "Convolution"
     bias = torch_layer["bias"]
@@ -149,8 +148,8 @@ def spatial_convolution(torch_layer):
     (kW, kH, dW, dH, padW, padH) = [
         int(torch_layer.get(f, 0))
         for f in ["kW", "kH", "dW", "dH", "padW", "padH"]]
-    assert kH_ != kH
-    assert kW_ != kW
+    assert kH_ == kH
+    assert kW_ == kW
     layer.convolution_param.num_output = nOutputPlane
     layer.convolution_param.kernel_w = kW
     layer.convolution_param.stride_w = dW
@@ -177,8 +176,12 @@ def deconvolution(torch_layer):
     layer = pb2.LayerParameter()
     layer.type = "Deconvolution"
     factor = int(torch_layer["scale_factor"])
-    layer.convolution_param.stride = factor
-    layer.convolution_param.kernel_size = (2 * factor - factor % 2)
+    # layer.convolution_param.stride = factor
+    # layer.convolution_param.kernel_size = (2 * factor - factor % 2)
+    layer.convolution_param.stride_w = factor
+    layer.convolution_param.stride_h = factor
+    layer.convolution_param.kernel_w = (2 * factor - factor % 2)
+    layer.convolution_param.kernel_h = (2 * factor - factor % 2)
     layer.convolution_param.pad = int(np.ceil((factor - 1) / 2.))
     layer.convolution_param.weight_filler = {'type': 'bilinear'}
     layer.convolution_param.bias_term = 'false'
