@@ -269,15 +269,15 @@ M.CONVERTER = {
         end},
     ['nn.LeakyReLU'] = simple{typename='caffe.ReLU', inplace=true},
     ['nn.SpatialBatchNormalization'] = simple{typename='caffe.BatchNorm'},
-    ['nn.SpatialUpSamplingNearest'] = function(net, layer, bottom_edges, top_edges)
-	    return bottom_edges
-    end,
+    --['nn.SpatialUpSamplingNearest'] = function(net, layer, bottom_edges, top_edges)
+	--    return bottom_edges
+    --end,
     ['nn.Identity'] = function(net, layer, bottom_edges, top_edges)
 	    return bottom_edges
     end,
-    ['nn.SpatialUpSamplingBilinear'] = function(net, layer, bottom_edges, top_edges)
-	    return bottom_edges
-    end,
+    --['nn.SpatialUpSamplingBilinear'] = function(net, layer, bottom_edges, top_edges)
+	--    return bottom_edges
+    --end,
 }
 
 function M.add(net, layer, bottom_edges, top_edges)
