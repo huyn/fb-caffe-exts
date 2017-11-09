@@ -183,7 +183,7 @@ def deconvolution(torch_layer):
     layer.convolution_param.kernel_w = (2 * factor - factor % 2)
     layer.convolution_param.kernel_h = (2 * factor - factor % 2)
     layer.convolution_param.pad.append(int(np.ceil((factor - 1) / 2.)))
-    layer.convolution_param.weight_filler = {'type': 'bilinear'}
+    layer.convolution_param.weight_filler.extend({'type': 'bilinear'})
     layer.convolution_param.bias_term = 'false'
 
     # weight = torch_layer["weight"]
