@@ -171,22 +171,22 @@ def deconvolution(torch_layer):
     log.info("do deconvolution")
     log.info(torch_layer)
     print_all(torch_layer["output"])
-    print_all(torch_layer["gradInput"])
+    # print_all(torch_layer["gradInput"])
 
     output = torch_layer["output"]
-    gradinput = torch_layer["gradInput"]
+    # gradinput = torch_layer["gradInput"]
     print(len(output))
-    print(len(gradinput))
-    print(output[0].size[1])
-    print(gradinput[0].size[1])
-    assert torch_layer is None
+    # print(len(gradinput))
+    # print(output[0].size[1])
+    # print(gradinput[0].size[1])
+    # assert torch_layer is None
 
     layer = pb2.LayerParameter()
     layer.type = "Deconvolution"
     factor = int(torch_layer["scale_factor"])
     # layer.convolution_param.stride = factor
     # layer.convolution_param.kernel_size = (2 * factor - factor % 2)
-    layer.convolution_param.num_output = output.size()
+    layer.convolution_param.num_output = len(output[0])
     layer.convolution_param.stride_w = factor
     layer.convolution_param.stride_h = factor
     layer.convolution_param.kernel_w = (2 * factor - factor % 2)
@@ -194,7 +194,7 @@ def deconvolution(torch_layer):
     layer.convolution_param.pad.append(int(np.ceil((factor - 1) / 2.)))
     # layer.convolution_param.weight_filler.extend({'type': 'bilinear'})
     layer.convolution_param.bias_term = False
-    layer.param.extend({'lr_mult': 0, 'decay_mult': 0})
+    # layer.param.extend({'lr_mult': 0, 'decay_mult': 0})
 
     # weight = torch_layer["weight"]
     # bias = torch_layer["bias"]
