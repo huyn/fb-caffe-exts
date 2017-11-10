@@ -75,10 +75,12 @@ class NetBuilder(object):
             # print(output)
             print("output 0:")
             print(output[0])
-            print("start print output[0] size")
-            print(output[0].size[1])
-            print(output[0].size[0])
-            print("end print output[0] size")
+            print("start print output size")
+            print(len(output))
+            print(len(output[0]))
+            # print(output[0].size[1])
+            # print(output[0].size[0])
+            print("end print output size")
             assert torch_layer is None
 
         log.info(bottom_edges)
