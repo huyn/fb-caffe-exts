@@ -70,8 +70,12 @@ class NetBuilder(object):
         # if typename == 'caffe.SpatialUpSamplingNearest' or typename == 'caffe.ReLU':
         if typename == 'caffe.SpatialUpSamplingNearest':
             output = torch_layer["output"]
-            print("print output size")
-            print(output[0].size[1])
+            # print("print output size")
+            # print(output[0].size[1])
+            print(output)
+            print("output 0:")
+            print(output[0])
+            log.info('print output size : %d', output[0].size[1])
             assert torch_layer is None
 
         log.info(bottom_edges)
