@@ -14,10 +14,10 @@ from __future__ import unicode_literals
 import logging
 import os
 
-import numpy as np
-
 # import caffe
 import caffe.proto.caffe_pb2 as pb2
+import numpy as np
+
 
 # import sys
 def print_all(obj):
@@ -167,26 +167,16 @@ def spatial_convolution(torch_layer):
     return layer
 
 
-def as_param_spec():
-    param = pb2.ParamSpec()
-    param.lr_mult = 0
-    param.decay_mult = 0
-    return param
-
-
-def as_filler_parameter():
-    filler = pb2.FillerParameter()
-    filler.type = 'bilinear'
-    return filler
-
-
 def deconvolution(torch_layer):
     log.info("do deconvolution")
     log.info(torch_layer)
     # print_all(torch_layer["output"])
     # print_all(torch_layer["gradInput"])
 
-    output = torch_layer["output"]
+    # get output and cal num_output
+    # output = torch_layer["output"]
+    # print(len(output[0]))
+
     # gradinput = torch_layer["gradInput"]
     # print(len(output))
     # print(len(gradinput))
@@ -194,14 +184,12 @@ def deconvolution(torch_layer):
     # print(gradinput[0].size[1])
     # assert torch_layer is None
 
-    # print(len(output[0]))
-
     layer = pb2.LayerParameter()
     layer.type = "Deconvolution"
     factor = int(torch_layer["scale_factor"])
+    # layer.convolution_param.num_output = len(output[0])
     # layer.convolution_param.stride = factor
     # layer.convolution_param.kernel_size = (2 * factor - factor % 2)
-    # layer.convolution_param.num_output = len(output[0])
     layer.convolution_param.stride_w = factor
     layer.convolution_param.stride_h = factor
     layer.convolution_param.kernel_w = (2 * factor - factor % 2)
@@ -209,19 +197,11 @@ def deconvolution(torch_layer):
     layer.convolution_param.pad.append(int(np.ceil((factor - 1) / 2.)))
     layer.convolution_param.bias_term = False
     layer.convolution_param.weight_filler.type = 'biliear'
-    # layer.param.lr_mult = 0
-    # layer.param.decay_mult = 0
 
     param_spec = pb2.ParamSpec()
     param_spec.lr_mult = 0
-    param_spec.lr_mult = 0
+    param_spec.decay_mult = 0
     layer.param.extend([param_spec])
-
-    # layer.param.CopyFrom(as_param_spec())
-    # layer.convolution_param.weight_filler.extend(as_filler_parameter())
-    # layer.param.extend(as_param_spec())
-    # layer.convolution_param.weight_filler = {'type': 'bilinear'}
-    # layer.param.extend({'lr_mult': 0, 'decay_mult': 0})
 
     # weight = torch_layer["weight"]
     # bias = torch_layer["bias"]
