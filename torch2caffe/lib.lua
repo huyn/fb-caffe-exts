@@ -232,7 +232,7 @@ end
 
 function M.run(opts, torch_net)
     -- print(torch_net)
-    M.forward(opts, torch_net)
+    -- M.forward(opts, torch_net)
     M.convert(opts, torch_net)
     M.compare(opts, torch_net)
 end
