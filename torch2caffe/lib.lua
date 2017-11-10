@@ -179,8 +179,56 @@ function M.convert(opts, torch_net)
     t2c.finalize(opts, net_builder)
 end
 
+function M.forward(opts, torch_net)
+    torch_net:apply(function(m) m:evaluate() end)
+    print("forward...1")
+    local inputs = {}
+    for i=1,#opts.inputs do
+        local input_spec = opts.inputs[i]
+        local tensor
+        if input_spec.tensor then
+            tensor = input_spec.tensor
+        else
+            tensor = torch.rand(table.unpack(input_spec.input_dims)):float()
+        end
+        table.insert(inputs, {name=input_spec.name, tensor=tensor})
+    end
+
+    print("forward...2")
+    -- Legacy code
+    if opts.input_tensor then
+        assert(inputs[1].name == "data")
+        inputs[1].tensor = opts.input_tensor
+    end
+
+    print("forward...3")
+    print(inputs)
+    -- Torch multi-inputs take an ordered Table.
+    local function inputs_to_torch_inputs(inputs, type)
+        if #inputs == 1 then
+            return inputs[1].tensor:type(type)
+        end
+        local tensors = {}
+        for i=1,#inputs do
+            table.insert(tensors, inputs[i].tensor:type(type))
+        end
+        return tensors
+    end
+    local torch_outputs
+    print("forward...4")
+    -- Some networks only accept CUDA input.
+    local ok, err = pcall(function()
+            torch_net:float()
+            local torch_inputs = inputs_to_torch_inputs(
+                inputs, 'torch.FloatTensor')
+            torch_outputs = torch_net:forward(torch_inputs)
+    end)
+    print("forward end...")
+end
+
 function M.run(opts, torch_net)
     -- print(torch_net)
+    M.forward(opts, torch_net)
     M.convert(opts, torch_net)
     M.compare(opts, torch_net)
 end
