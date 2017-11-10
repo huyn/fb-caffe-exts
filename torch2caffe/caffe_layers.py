@@ -190,6 +190,7 @@ def deconvolution(torch_layer):
     layer.type = "Deconvolution"
     factor = int(torch_layer["scale_factor"])
     layer.convolution_param.num_output = len(output[0])
+    layer.convolution_param.group = len(output[0])
     # layer.convolution_param.stride = factor
     # layer.convolution_param.kernel_size = (2 * factor - factor % 2)
     layer.convolution_param.stride_w = factor
@@ -198,12 +199,12 @@ def deconvolution(torch_layer):
     layer.convolution_param.kernel_h = (2 * factor - factor % 2)
     layer.convolution_param.pad.append(int(np.ceil((factor - 1) / 2.)))
     layer.convolution_param.bias_term = False
-    # layer.convolution_param.weight_filler.type = 'bilinear'
+    layer.convolution_param.weight_filler.type = 'bilinear'
 
-    # param_spec = pb2.ParamSpec()
-    # param_spec.lr_mult = 0
-    # param_spec.decay_mult = 0
-    # layer.param.extend([param_spec])
+    param_spec = pb2.ParamSpec()
+    param_spec.lr_mult = 0
+    param_spec.decay_mult = 0
+    layer.param.extend([param_spec])
 
     # weight = torch_layer["weight"]
     # bias = torch_layer["bias"]
@@ -353,6 +354,13 @@ def batchnorm(torch_layer):
     return layer
 
 
+def leaky(torch_layer):
+    layer = pb2.LayerParameter()
+    layer.type = "ReLU"
+    # layer.relu_param.negative_slope=torch_layer[""]
+    return layer
+
+
 def build_converter(opts):
     return {
         'caffe.Concat': concat,
@@ -362,7 +370,7 @@ def build_converter(opts):
         'caffe.Log': ty('Log'),
         'caffe.LogSoftmax': ty('LogSoftmax'),
         'caffe.ReLU': ty('ReLU'),
-        'caffe.LeakyReLU': ty('LeakyReLU'),
+        'caffe.LeakyReLU': leaky,
         'caffe.Reduction': reduction,
         'caffe.Slice': slice,
         'caffe.Softmax': softmax(opts),
