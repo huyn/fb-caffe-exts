@@ -355,6 +355,8 @@ def batchnorm(torch_layer):
 
 
 def leaky(torch_layer):
+    log.info('print LeakyReLU')
+    log.info(torch_layer)
     layer = pb2.LayerParameter()
     layer.type = "ReLU"
     # layer.relu_param.negative_slope=torch_layer[""]
