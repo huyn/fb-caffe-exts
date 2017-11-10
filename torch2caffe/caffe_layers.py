@@ -167,6 +167,19 @@ def spatial_convolution(torch_layer):
     return layer
 
 
+def as_param_spec():
+    param = pb2.ParamSpec()
+    param.lr_mult = 0
+    param.decay_mult = 0
+    return param
+
+
+def as_filler_parameter():
+    filler = pb2.FillerParameter()
+    filler.type = 'bilinear'
+    return filler
+
+
 def deconvolution(torch_layer):
     log.info("do deconvolution")
     log.info(torch_layer)
@@ -195,8 +208,10 @@ def deconvolution(torch_layer):
     layer.convolution_param.kernel_h = (2 * factor - factor % 2)
     layer.convolution_param.pad.append(int(np.ceil((factor - 1) / 2.)))
     layer.convolution_param.bias_term = False
-    layer.param.extend({'lr_mult': 0, 'decay_mult': 0})
-    layer.convolution_param.weight_filler.extend({'type': 'bilinear'})
+    layer.convolution_param.weight_filler = as_filler_parameter()
+    layer.param = as_param_spec()
+    # layer.convolution_param.weight_filler = {'type': 'bilinear'}
+    # layer.param.extend({'lr_mult': 0, 'decay_mult': 0})
 
     # weight = torch_layer["weight"]
     # bias = torch_layer["bias"]
