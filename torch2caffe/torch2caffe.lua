@@ -10,6 +10,7 @@ local t2c = require 'torch2caffe.lib'
 local pl = require('pl.import_into')()
 
 local opt = pl.lapp[[
+   --forward (default 0) enable torch.forward
    --input (default "") Input model file
    --preprocessing (default "") Preprocess the model
    --prototxt (default "") Output prototxt model file
