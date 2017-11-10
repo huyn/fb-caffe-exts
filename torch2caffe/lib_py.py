@@ -67,7 +67,8 @@ class NetBuilder(object):
                   num_tops,
                   inplace):
         log.info(torch_layer)
-        if typename == 'caffe.SpatialUpSamplingNearest' or typename == 'caffe.ReLU':
+        # if typename == 'caffe.SpatialUpSamplingNearest' or typename == 'caffe.ReLU':
+        if typename == 'caffe.SpatialUpSamplingNearest':
             assert torch_layer is None
 
         log.info(bottom_edges)

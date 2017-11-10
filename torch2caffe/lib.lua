@@ -180,8 +180,7 @@ function M.convert(opts, torch_net)
 end
 
 function M.run(opts, torch_net)
-    print("Running with model: ")
-    print(torch_net)
+    -- print(torch_net)
     M.convert(opts, torch_net)
     M.compare(opts, torch_net)
 end
