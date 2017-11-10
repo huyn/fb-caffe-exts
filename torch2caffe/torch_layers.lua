@@ -77,7 +77,7 @@ M.CONVERTER = {
             return layer
         end},
     ['nn.Tanh'] = simple{typename='caffe.TanH', inplace=false},
-    ['nn.ReLU'] = simple{typename='caffe.ReLU', inplace=false},
+    ['nn.ReLU'] = simple{typename='caffe.ReLU', inplace=true},
     ['nn.Threshold'] = simple{typename='caffe.FBThreshold', inplace=true},
     ['nn.Sequential'] = function(net, layer, bottom_edges, top_edges)
         print("do nn.Sequential...")
