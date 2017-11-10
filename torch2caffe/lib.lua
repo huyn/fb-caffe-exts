@@ -223,7 +223,11 @@ function M.forward(opts, torch_net)
                 inputs, 'torch.FloatTensor')
             torch_outputs = torch_net:forward(torch_inputs)
     end)
-    print("forward end...")
+    if ok then
+        print("forward end...")
+    else
+        print("forward fail...")
+    end
 end
 
 function M.run(opts, torch_net)
