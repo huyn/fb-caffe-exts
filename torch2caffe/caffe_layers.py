@@ -209,8 +209,14 @@ def deconvolution(torch_layer):
     layer.convolution_param.pad.append(int(np.ceil((factor - 1) / 2.)))
     layer.convolution_param.bias_term = False
     layer.convolution_param.weight_filler.type = 'biliear'
-    layer.param.lr_mult = 0
-    layer.param.decay_mult = 0
+    # layer.param.lr_mult = 0
+    # layer.param.decay_mult = 0
+
+    param_spec = pb2.ParamSpec()
+    param_spec.lr_mult = 0
+    param_spec.lr_mult = 0
+    layer.param.extend([param_spec])
+
     # layer.param.CopyFrom(as_param_spec())
     # layer.convolution_param.weight_filler.extend(as_filler_parameter())
     # layer.param.extend(as_param_spec())
