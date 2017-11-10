@@ -76,8 +76,8 @@ M.CONVERTER = {
             layer["input_dim"] = layer.weight:size(1)
             return layer
         end},
-    ['nn.Tanh'] = simple{typename='caffe.TanH', inplace=true},
-    ['nn.ReLU'] = simple{typename='caffe.ReLU', inplace=true},
+    ['nn.Tanh'] = simple{typename='caffe.TanH', inplace=false},
+    ['nn.ReLU'] = simple{typename='caffe.ReLU', inplace=false},
     ['nn.Threshold'] = simple{typename='caffe.FBThreshold', inplace=true},
     ['nn.Sequential'] = function(net, layer, bottom_edges, top_edges)
         print("do nn.Sequential...")
@@ -267,7 +267,7 @@ M.CONVERTER = {
             --end
             return {}
         end},
-    ['nn.LeakyReLU'] = simple{typename='caffe.LeakyReLU', inplace=true},
+    ['nn.LeakyReLU'] = simple{typename='caffe.LeakyReLU', inplace=false},
     ['nn.SpatialBatchNormalization'] = simple{typename='caffe.BatchNorm'},
     ['nn.Identity'] = function(net, layer, bottom_edges, top_edges)
 	    return bottom_edges
@@ -286,10 +286,10 @@ function M.add(net, layer, bottom_edges, top_edges)
     local layer_type = torch.type(layer)
     for layer_pattern, converter in pairs(M.CONVERTER) do
         if string.find(layer_type, layer_pattern) then
-	        print("which layer : ", layer_type)
-	        print("bottom_edges value : ", bottom_edges)
+	        -- print("which layer : ", layer_type)
+	        -- print("bottom_edges value : ", bottom_edges)
             local result = converter(net, layer, bottom_edges, top_edges)
-            print("after converter : ", bottom_edges)
+            -- print("after converter : ", bottom_edges)
 	    return result
 	    end
     end
