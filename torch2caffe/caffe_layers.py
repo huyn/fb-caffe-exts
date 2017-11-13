@@ -363,7 +363,7 @@ def batchnorm(torch_layer):
 def batchnorm_scale(torch_layer):
     layer = pb2.LayerParameter()
     layer.type = "Scale"
-    layer.scale_param = True
+    layer.scale_param.bias_term = True
     return layer
 
 
