@@ -280,6 +280,17 @@ function M.main(opts)
     print(("Parsed opts: %s").format(pl.pretty.write(opts)))
 
     if opts.compare > 0 then
+        model:apply(function(m) m:evaluate() end)
+        local count = table.getn(model.modules)
+        local layertemp;
+        for i=1, count do
+            print ("----------1", i)
+            if(i > 0) then
+                layertemp=model:get(i);
+                print(layertemp)
+            end
+        end
+
         return M.compare(opts, model)
     else
         if opts.verify ~= "" then
