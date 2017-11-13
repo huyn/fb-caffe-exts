@@ -244,7 +244,7 @@ end
 
 function M.printModule(model)
     if model.modules == nil then
-        print("-------- : ", model.name)
+        print("-------- : ", torch.typename(model))
         print(model.weight)
     else
         local count = table.getn(model.modules)
@@ -255,7 +255,7 @@ function M.printModule(model)
                 M.printModule(layertemp)
             end
         else
-            print("-------- : ", model.name)
+            print("======== : ", torch.typename(model))
             print(model.weight)
         end
     end
