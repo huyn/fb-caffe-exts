@@ -245,7 +245,9 @@ end
 function M.printModule(model)
     if model.modules == nil then
         print("-------- : ", torch.typename(model))
-        print(model.weight)
+        if torch.typename(model) == 'nn.SpatialConvolution' then
+            print(model.weight)
+        end
     else
         local count = table.getn(model.modules)
         if count > 0 then
@@ -256,7 +258,9 @@ function M.printModule(model)
             end
         else
             print("======== : ", torch.typename(model))
-            print(model.weight)
+            if torch.typename(model) == 'nn.SpatialConvolution' then
+                print(model.weight)
+            end
         end
     end
 end
