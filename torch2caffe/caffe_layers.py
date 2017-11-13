@@ -344,7 +344,7 @@ def softmax(opts):
 
 def batchnorm(torch_layer):
     log.info('do batchnorm')
-    # log.info(torch_layer)
+    log.info(torch_layer)
     layer = pb2.LayerParameter()
     layer.type = "BatchNorm"
     # Caffe BN doesn't support bias
