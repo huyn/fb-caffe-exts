@@ -19,6 +19,9 @@ import torch2caffe.caffe_layers
 import logging
 log = logging.getLogger(__name__)
 
+def new_batchscalelayer_name(name, index):
+    return '%s_%d' % (name, index)
+
 def to_caffe(layers, edges, opts):
     """ 1. prepare the caffe layers """
     caffe_layers = []
@@ -30,6 +33,9 @@ def to_caffe(layers, edges, opts):
         caffe_layer.top.extend([edges[i].name for i in layer.top_edges])
 
         print("to caffe...")
+        print(layer.typename)
+        print(layer.index)
+        print(new_batchscalelayer_name(layer.typename, layer.index))
         print(caffe_layer.name)
         print(caffe_layer.bottom)
         print(caffe_layer.top)

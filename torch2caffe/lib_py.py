@@ -26,7 +26,7 @@ logging.basicConfig(level=logging.INFO)
 
 Layer = collections.namedtuple(
     'Layer',
-    ['typename', 'name', 'torch_layer', 'bottom_edges', 'top_edges'])
+    ['typename', 'name', 'index', 'torch_layer', 'bottom_edges', 'top_edges'])
 
 Edge = collections.namedtuple(
     'Edge',
@@ -118,6 +118,7 @@ class NetBuilder(object):
         self._layers.append(Layer(
             typename=typename,
             name=layername,
+            index=self._namecount-1,
             torch_layer=torch_layer,
             bottom_edges=bottom_edges,
             top_edges=top_edges))
