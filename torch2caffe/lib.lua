@@ -79,7 +79,7 @@ function M.compare(opts, torch_net)
         else
             -- tensor = torch.rand(table.unpack(input_spec.input_dims)):float()
             tensor = torch.Tensor(1, 3, 256, 256)
-            s = x:storage()
+            s = tensor:storage()
             for i=1,s:size() do -- fill up the Storage
               s[i] = 1
             end
