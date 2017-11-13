@@ -165,10 +165,8 @@ def finalize(opts, net):
 def load(opts):
     net = caffe.Net(opts["prototxt"], opts["caffemodel"], caffe.TEST)
     assert net, "Net is none?"
-    for i, layer in enumerate(net.layers):
-        print(i)
-        print(layer.name)
-        print(layer)
+    for name in net._layer_names:
+        print(net.param[name])[0].data
     return net
 
 def check_layer_names(opts, expected_names):
