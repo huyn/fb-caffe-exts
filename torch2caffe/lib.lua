@@ -244,15 +244,20 @@ end
 
 function M.printModule(model)
     local count = table.getn(model.modules)
-    if count > 0 then
-        local layertemp;
-        for i=1, count do
-            layertemp=model:get(i);
-            M.printModule(layertemp)
-        end
-    else
+    if model.modules == nil then
         print("-------- : ", model.name)
         print(model.weight)
+    else
+        if count > 0 then
+            local layertemp;
+            for i=1, count do
+                layertemp=model:get(i);
+                M.printModule(layertemp)
+            end
+        else
+            print("-------- : ", model.name)
+            print(model.weight)
+        end
     end
 end
 
