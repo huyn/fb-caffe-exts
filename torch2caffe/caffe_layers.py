@@ -177,7 +177,7 @@ def deconvolution(torch_layer):
     output = torch_layer["output"]
     size = len(output)
     assert size > 0
-    print(len(output[0]))
+    # print(len(output[0]))
 
     # gradinput = torch_layer["gradInput"]
     # print(len(output))
@@ -343,12 +343,17 @@ def softmax(opts):
 
 
 def batchnorm(torch_layer):
-    log.info('print batchnorm info')
-    log.info(torch_layer)
+    log.info('do batchnorm')
+    # log.info(torch_layer)
     layer = pb2.LayerParameter()
     layer.type = "BatchNorm"
     # Caffe BN doesn't support bias
     # assert torch_layer["affine"]==0 #would cause crash
+    affine = torch_layer['affine']
+    if affine:
+        log.info('batch affine is true')
+    else:
+        log.info('batch affine is false')
     layer.batch_norm_param.use_global_stats = 1
     blobs_weight = np.ones(1)
     layer.blobs.extend([as_blob(torch_layer["running_mean"]),

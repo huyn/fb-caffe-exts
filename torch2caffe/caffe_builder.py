@@ -28,6 +28,12 @@ def to_caffe(layers, edges, opts):
         caffe_layer.name = layer.name
         caffe_layer.bottom.extend([edges[i].name for i in layer.bottom_edges])
         caffe_layer.top.extend([edges[i].name for i in layer.top_edges])
+
+        print("to caffe...")
+        print(caffe_layer.name)
+        print(caffe_layer.bottom)
+        print(caffe_layer.top)
+
         caffe_layers.append(caffe_layer)
 
     """ 2. caffe input parameters """
