@@ -284,7 +284,7 @@ function M.test(opts, torch_net)
         torch_net:apply(function(m) m:evaluate() end)
         M.printModule(torch_net)
     end
-    return M.compare(opts, model)
+    return M.compare(opts, torch_net)
 end
 
 function M.main(opts)
