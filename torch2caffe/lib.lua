@@ -141,6 +141,7 @@ function M.compare(opts, torch_net)
 
     print("compare...9")
     for i = 1,#caffe_outputs do
+        print(i)
         local torch_output = torch_outputs[i]
         local caffe_output = caffe_outputs[i]
         --logging.infof("Caffe norm: %s, Torch norm: %s", torch.norm(caffe_output), torch.norm(torch_output))
