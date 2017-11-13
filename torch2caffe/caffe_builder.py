@@ -46,7 +46,7 @@ def to_caffe(layers, edges, opts):
             print("new batchnorm scale layer")
             caffe_scale_layer = torch2caffe.caffe_layers.convert(
                 opts, "caffe.BatchNormScale", layer.torch_layer)
-            caffe_scale_layer.name = new_batchscalelayer_name(caffe_layer.typename)
+            caffe_scale_layer.name = new_batchscalelayer_name(caffe_layer.name)
             caffe_scale_layer.bottom.extend([edges[i].name for i in layer.top_edges])
             caffe_scale_layer.top.extend([edges[i].name for i in layer.top_edges])
             caffe_layers.append(caffe_scale_layer)
