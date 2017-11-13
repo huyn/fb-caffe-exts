@@ -167,8 +167,8 @@ def load(opts):
     assert net, "Net is none?"
     for name in net._layer_names:
         print(name)
-        if name != "input":
-            print(net.params[name][0].data)
+        # if name != "input":
+        #     print(net.params[name][0].data)
     return net
 
 def check_layer_names(opts, expected_names):
