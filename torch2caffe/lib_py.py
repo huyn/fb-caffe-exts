@@ -169,7 +169,7 @@ def load(opts):
         print(name)
         if name == "ConvNdBackward1":
             # print(net.params[name][0].data)
-            print(net.params[name][0].bias)
+            print(net.params[name][0].diff)
             print(net.params[name][0].data[2][1][1][1])
             print(net.params[name][0].data[1][2][1][1])
     return net
