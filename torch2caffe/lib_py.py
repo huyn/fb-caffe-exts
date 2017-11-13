@@ -172,7 +172,7 @@ def load(opts):
             # print(net.params[name][0].data[1][2][1][1])
             print(net.params[name][0].data[1][0][0][0])
             print(net.params[name][0].data[0][1][0][0])
-            print(net.params[name][0].data)
+            print(net.params[name][1].data)
             # print(net.params[name][0].diff)
     return net
 
