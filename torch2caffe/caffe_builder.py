@@ -19,8 +19,8 @@ import torch2caffe.caffe_layers
 import logging
 log = logging.getLogger(__name__)
 
-def new_batchscalelayer_name(name, index):
-    return '%s_%d' % (name, index)
+def new_batchscalelayer_name(name):
+    return '%s_%s' % (name, "scale")
 
 def to_caffe(layers, edges, opts):
     """ 1. prepare the caffe layers """
@@ -32,15 +32,24 @@ def to_caffe(layers, edges, opts):
         caffe_layer.bottom.extend([edges[i].name for i in layer.bottom_edges])
         caffe_layer.top.extend([edges[i].name for i in layer.top_edges])
 
-        print("to caffe...")
-        print(layer.typename)
-        print(layer.index)
-        print(new_batchscalelayer_name(layer.typename, layer.index))
-        print(caffe_layer.name)
-        print(caffe_layer.bottom)
-        print(caffe_layer.top)
+        # print("to caffe...")
+        # print(layer.typename)
+        # print(layer.index)
+        # print(new_batchscalelayer_name(layer.typename, layer.index))
+        # print(caffe_layer.name)
+        # print(caffe_layer.bottom)
+        # print(caffe_layer.top)
 
         caffe_layers.append(caffe_layer)
+
+        if "caffe.BatchNorm" == layer.typename:
+            print("new batchnorm scale layer")
+            caffe_scale_layer = torch2caffe.caffe_layers.convert(
+                opts, "caffe.BatchNormScale", layer.torch_layer)
+            caffe_scale_layer.name = new_batchscalelayer_name(caffe_layer.typename)
+            caffe_scale_layer.bottom.extend([edges[i].name for i in layer.top_edges])
+            caffe_scale_layer.top.extend([edges[i].name for i in layer.top_edges])
+            caffe_layers.append(caffe_scale_layer)
 
     """ 2. caffe input parameters """
     text_net = pb2.NetParameter()

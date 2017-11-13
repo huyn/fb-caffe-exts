@@ -360,6 +360,12 @@ def batchnorm(torch_layer):
                         as_blob(torch_layer["running_var"]), as_blob(blobs_weight)])
     return layer
 
+def batchnorm_scale(torch_layer):
+    layer = pb2.LayerParameter()
+    layer.type = "Scale"
+    layer.scale_param = True
+    return layer
+
 
 def leaky(torch_layer):
     # log.info('print LeakyReLU')
@@ -392,6 +398,7 @@ def build_converter(opts):
         'caffe.FBThreshold': fbthreshold,
         'caffe.LSTM': lstm,
         'caffe.BatchNorm': batchnorm,
+        'caffe.BatchNormScale': batchnorm_scale,
         'caffe.SpatialUpSamplingNearest': deconvolution,
         'caffe.SpatialUpSamplingBilinear': deconvolution,
     }
