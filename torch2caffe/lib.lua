@@ -77,12 +77,17 @@ function M.compare(opts, torch_net)
         if input_spec.tensor then
             tensor = input_spec.tensor
         else
-            tensor = torch.rand(table.unpack(input_spec.input_dims)):float()
+            -- tensor = torch.rand(table.unpack(input_spec.input_dims)):float()
+            tensor = torch.Tensor(1, 3, 256, 256)
+            s = x:storage()
+            for i=1,s:size() do -- fill up the Storage
+              s[i] = 1
+            end
         end
         table.insert(inputs, {name=input_spec.name, tensor=tensor})
     end
 
-    print("compare...2")
+    print("compare...2", inputs)
     -- Legacy code
     if opts.input_tensor then
         assert(inputs[1].name == "data")
@@ -275,9 +280,10 @@ function M.printModule(model)
 end
 
 function M.test(opts, torch_net)
-    torch_net:apply(function(m) m:evaluate() end)
-    M.printModule(torch_net)
-
+    if opts.test then
+        torch_net:apply(function(m) m:evaluate() end)
+        M.printModule(torch_net)
+    end
     return M.compare(opts, model)
 end
 
@@ -319,7 +325,7 @@ function M.main(opts)
     print(("Parsed opts: %s").format(pl.pretty.write(opts)))
 
     if opts.compare > 0 then
-        opts.test = true
+        -- opts.test = true
         return M.test(opts, model)
     else
         if opts.verify ~= "" then
