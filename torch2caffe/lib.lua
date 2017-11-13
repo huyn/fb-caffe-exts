@@ -31,7 +31,7 @@ function M.evaluate_caffe(caffe_net, inputs)
     print("start to val outputlist")
     local caffe_output_length = py.eval("len(a)", {a=caffe_output_list})
     print("val output success")
-    print(caffe_output_length)
+    --print(caffe_output_length)
     local caffe_outputs = {}
     for i=0,caffe_output_length-1 do
         table.insert(caffe_outputs,
@@ -74,16 +74,17 @@ function M.compare(opts, torch_net)
     for i=1,#opts.inputs do
         local input_spec = opts.inputs[i]
         local tensor
-        if input_spec.tensor then
-            tensor = input_spec.tensor
-        else
-            -- tensor = torch.rand(table.unpack(input_spec.input_dims)):float()
-            tensor = torch.Tensor(1, 3, 256, 256)
-            s = tensor:storage()
-            for i=1,s:size() do -- fill up the Storage
-              s[i] = 1
-            end
+--        if input_spec.tensor then
+--            tensor = input_spec.tensor
+--        else
+--            tensor = torch.rand(table.unpack(input_spec.input_dims)):float()
+--        end
+        tensor = torch.Tensor(1, 3, 256, 256)
+        s = tensor:storage()
+        for i=1,s:size() do -- fill up the Storage
+          s[i] = 1
         end
+        print("tensor input : ", tensor)
         table.insert(inputs, {name=input_spec.name, tensor=tensor})
     end
 
@@ -97,7 +98,7 @@ function M.compare(opts, torch_net)
     print("compare...3")
     local caffe_net = t2c.load(opts)
     print("compare...3 result")
-    print(inputs)
+    --print(inputs)
     local caffe_outputs = M.evaluate_caffe(caffe_net, inputs)
 
     print("compare...4")
