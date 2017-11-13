@@ -153,7 +153,7 @@ function M.compare(opts, torch_net)
 
         local max_absolute_error = (caffe_output - torch_output):abs():max()
         --logging.infof("Maximum difference between Caffe and Torch output: %s", max_absolute_error)
-        print(("Maximum difference between Caffe and Torch output: %s").format(max_absolute_error))
+        print("Maximum difference between Caffe and Torch output: %s", max_absolute_error)
         if (max_absolute_error > 0.001) then
             debug_nets(caffe_net, torch_net)
             if os.getenv('LUA_DEBUG_ON_ERROR') then
