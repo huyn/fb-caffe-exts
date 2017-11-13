@@ -243,11 +243,11 @@ function M.run(opts, torch_net)
 end
 
 function M.printModule(model)
-    local count = table.getn(model.modules)
     if model.modules == nil then
         print("-------- : ", model.name)
         print(model.weight)
     else
+        local count = table.getn(model.modules)
         if count > 0 then
             local layertemp;
             for i=1, count do
