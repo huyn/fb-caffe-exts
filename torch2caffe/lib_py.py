@@ -181,13 +181,12 @@ def load(opts):
     for name in net._layer_names:
         # print(net.params[name])
         if name == "ConvNdBackward1":
-            print_all(net.params[name])
-            # print(net.params[name][0].data[2][1][1][1])
-            # print(net.params[name][0].data[1][2][1][1])
+            # print_all(net.params[name])
             print(net.params[name][0].data[1][0][0][0])
             print(net.params[name][0].data[0][1][0][0])
             # print(net.params[name][1].data)
             # print(net.params[name][0].diff)
+            print(net.params[name])
     return net
 
 
