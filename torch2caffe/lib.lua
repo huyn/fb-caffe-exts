@@ -65,7 +65,10 @@ local function debug_nets(caffe_net, torch_net)
 end
 
 function M.compare(opts, torch_net)
-    torch_net:apply(function(m) m:evaluate() end)
+    if not opts.test then
+        torch_net:apply(function(m) m:evaluate() end)
+    end
+
     print("compare...1")
     local inputs = {}
     for i=1,#opts.inputs do
@@ -310,6 +313,7 @@ function M.main(opts)
     print(("Parsed opts: %s").format(pl.pretty.write(opts)))
 
     if opts.compare > 0 then
+        opts.test = true
         return M.test(opts, model)
     else
         if opts.verify ~= "" then
