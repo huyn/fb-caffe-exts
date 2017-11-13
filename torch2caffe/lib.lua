@@ -242,6 +242,27 @@ function M.run(opts, torch_net)
     M.compare(opts, torch_net)
 end
 
+function M.printModule(model)
+    local count = table.getn(model.modules)
+    if count > 0 then
+        local layertemp;
+        for i=1, count do
+            layertemp=model:get(i);
+            M.printModule(layertemp)
+        end
+    else
+        print("-------- : ", model.name)
+        print(model.weight)
+    end
+end
+
+function M.test(opt, torch_net)
+    model:apply(function(m) m:evaluate() end)
+    M.printModule(torch_net)
+
+    return M.compare(opts, model)
+end
+
 function M.main(opts)
     --logging.infof("Opts: %s", pl.pretty.write(opts))
     print(("Opts: %s"):format(pl.pretty.write(opts)))
@@ -280,18 +301,7 @@ function M.main(opts)
     print(("Parsed opts: %s").format(pl.pretty.write(opts)))
 
     if opts.compare > 0 then
-        model:apply(function(m) m:evaluate() end)
-        local count = table.getn(model.modules)
-        local layertemp;
-        for i=1, count do
-            print ("----------1", i)
-            if(i > 0) then
-                layertemp=model:get(i);
-                print(layertemp)
-            end
-        end
-
-        return M.compare(opts, model)
+        return M.test(opts, model)
     else
         if opts.verify ~= "" then
             return M.compare(opts, model)
