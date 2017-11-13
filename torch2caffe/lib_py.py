@@ -167,6 +167,7 @@ def load(opts):
     assert net, "Net is none?"
     for i, layer in enumerate(net.layers):
         print(i)
+        print(layer.name)
         print(layer)
     return net
 
