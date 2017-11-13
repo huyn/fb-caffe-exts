@@ -84,7 +84,7 @@ function M.compare(opts, torch_net)
         for i=1,s:size() do -- fill up the Storage
           s[i] = 1
         end
-        print("tensor input : ", tensor)
+--        print("tensor input : ", tensor)
         table.insert(inputs, {name=input_spec.name, tensor=tensor})
     end
 
