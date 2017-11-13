@@ -51,9 +51,9 @@ def to_caffe(layers, edges, opts):
             caffe_scale_layer.bottom.extend([edges[i].name for i in layer.top_edges])
             caffe_scale_layer.top.extend([edges[i].name for i in layer.top_edges])
             caffe_layers.append(caffe_scale_layer)
-            print(caffe_scale_layer)
+            # print(caffe_scale_layer)
 
-        print(caffe_layer)
+        # print(caffe_layer)
 
     """ 2. caffe input parameters """
     text_net = pb2.NetParameter()
