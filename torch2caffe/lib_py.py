@@ -32,6 +32,7 @@ Edge = collections.namedtuple(
     'Edge',
     ['name'])
 
+
 class NetBuilder(object):
     def __init__(self):
         self._layers = []
@@ -47,8 +48,8 @@ class NetBuilder(object):
 
     def new_named_edges(self, edge_names):
         self._edges += [Edge(name=name) for name in edge_names]
-       	log.info('edge_names %s, len %d', edge_names, len(edge_names))
-	return range(len(self._edges) - len(edge_names), len(self._edges))
+        log.info('edge_names %s, len %d', edge_names, len(edge_names))
+        return range(len(self._edges) - len(edge_names), len(self._edges))
 
     def _new_edges(self, layername, num=1):
         new_edges = (
@@ -147,12 +148,15 @@ class NetBuilder(object):
 def initialize():
     return NetBuilder()
 
+
 def setup_inputs(opts, net):
     return net.new_named_edges([input['name'] for input in opts['inputs']])
+
 
 def setup_outputs(opts, net):
     return None if 'outputs' not in opts else (
         net.new_named_edges([output['name'] for output in opts['outputs']]))
+
 
 def finalize(opts, net):
     text_net, binary_weights = torch2caffe.caffe_builder.to_caffe(
@@ -175,6 +179,7 @@ def load(opts):
             print(net.params[name][1].data)
             # print(net.params[name][0].diff)
     return net
+
 
 def check_layer_names(opts, expected_names):
     net = caffe.proto.caffe_pb2.NetParameter()

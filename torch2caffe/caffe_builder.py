@@ -19,8 +19,10 @@ import torch2caffe.caffe_layers
 import logging
 log = logging.getLogger(__name__)
 
+
 def new_batchscalelayer_name(name):
     return '%s_%s' % (name, "scale")
+
 
 def to_caffe(layers, edges, opts):
     """ 1. prepare the caffe layers """
@@ -78,6 +80,7 @@ def to_caffe(layers, edges, opts):
         text_net.layer.extend([without_weights])
 
     return text_net, binary_weights
+
 
 def save(opts, text_net, binary_weights):
     log.info("Saving to %s (text)", opts["prototxt"])

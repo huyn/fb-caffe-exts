@@ -360,6 +360,7 @@ def batchnorm(torch_layer):
                         as_blob(torch_layer["running_var"]), as_blob(blobs_weight)])
     return layer
 
+
 def batchnorm_scale(torch_layer):
     layer = pb2.LayerParameter()
     layer.type = "Scale"
