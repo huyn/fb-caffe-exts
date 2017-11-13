@@ -42,14 +42,14 @@ def to_caffe(layers, edges, opts):
 
         caffe_layers.append(caffe_layer)
 
-        if "caffe.BatchNorm" == layer.typename:
-            print("new batchnorm scale layer")
-            caffe_scale_layer = torch2caffe.caffe_layers.convert(
-                opts, "caffe.BatchNormScale", layer.torch_layer)
-            caffe_scale_layer.name = new_batchscalelayer_name(caffe_layer.name)
-            caffe_scale_layer.bottom.extend([edges[i].name for i in layer.top_edges])
-            caffe_scale_layer.top.extend([edges[i].name for i in layer.top_edges])
-            caffe_layers.append(caffe_scale_layer)
+        # if "caffe.BatchNorm" == layer.typename:
+        #     print("new batchnorm scale layer")
+        #     caffe_scale_layer = torch2caffe.caffe_layers.convert(
+        #         opts, "caffe.BatchNormScale", layer.torch_layer)
+        #     caffe_scale_layer.name = new_batchscalelayer_name(caffe_layer.name)
+        #     caffe_scale_layer.bottom.extend([edges[i].name for i in layer.top_edges])
+        #     caffe_scale_layer.top.extend([edges[i].name for i in layer.top_edges])
+        #     caffe_layers.append(caffe_scale_layer)
 
     """ 2. caffe input parameters """
     text_net = pb2.NetParameter()
