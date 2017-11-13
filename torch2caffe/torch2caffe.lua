@@ -17,6 +17,7 @@ local opt = pl.lapp[[
    --caffemodel (default "") Output model weights file
    --format (default "lua") Format: lua | luathrift
    --input-tensor (default "") (Optional) Predefined input tensor
+   --compare (default 0) enable compare test
    --verify (default "") (Optional) Verify existing
    <input_dims...> (default 0)  Input dimensions (e.g. 10N x 3C x 227H x 227W)
 ]]

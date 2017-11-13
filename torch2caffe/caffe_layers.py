@@ -364,6 +364,8 @@ def batchnorm_scale(torch_layer):
     layer = pb2.LayerParameter()
     layer.type = "Scale"
     layer.scale_param.bias_term = True
+    layer.blobs.extend([as_blob(torch_layer["weight"]),
+                        as_blob(torch_layer["bias"])])
     return layer
 
 

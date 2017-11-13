@@ -277,12 +277,16 @@ function M.main(opts)
 
     --logging.infof("Parsed opts: %s", pl.pretty.write(opts))
     print(("Parsed opts: %s").format(pl.pretty.write(opts)))
---    if opts.verify ~= "" then
---        return M.compare(opts, model)
---    else
---        return M.run(opts, model)
---    end
-    return M.compare(opts, model)
+
+    if opts.compare > 0 then
+        return M.compare(opts, model)
+    else
+        if opts.verify ~= "" then
+            return M.compare(opts, model)
+        else
+            return M.run(opts, model)
+        end
+    end
 
 end
 
