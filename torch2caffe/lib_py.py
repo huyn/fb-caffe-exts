@@ -166,17 +166,27 @@ def finalize(opts, net):
     torch2caffe.caffe_builder.save(opts, text_net, binary_weights)
 
 
+def print_all(obj):
+    modulelist = dir(obj)
+    length = len(modulelist)
+    print('=================print_all...start')
+    for i in range(0,length,1):
+        print(modulelist[i])
+    print('=================print_all...end')
+
+
 def load(opts):
     net = caffe.Net(opts["prototxt"], opts["caffemodel"], caffe.TEST)
     assert net, "Net is none?"
     for name in net._layer_names:
-        print(name)
+        # print(net.params[name])
         if name == "ConvNdBackward1":
+            print_all()
             # print(net.params[name][0].data[2][1][1][1])
             # print(net.params[name][0].data[1][2][1][1])
             print(net.params[name][0].data[1][0][0][0])
             print(net.params[name][0].data[0][1][0][0])
-            print(net.params[name][1].data)
+            # print(net.params[name][1].data)
             # print(net.params[name][0].diff)
     return net
 
