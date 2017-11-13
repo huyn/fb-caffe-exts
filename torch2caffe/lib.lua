@@ -249,10 +249,10 @@ function M.printModule(model)
     if model.modules == nil then
         print("-------- : ", torch.typename(model))
         if torch.typename(model) == 'nn.SpatialConvolution' then
-            -- print(model.weight)
-            print(model.bias)
             print(model.weight[2][1][1][1])
             print(model.weight[1][2][1][1])
+            print(model.weight)
+            -- print(model.bias)
         end
     else
         local count = table.getn(model.modules)
