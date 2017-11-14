@@ -80,16 +80,16 @@ function M.compare(opts, torch_net)
     for i=1,#opts.inputs do
         local input_spec = opts.inputs[i]
         local tensor
---        if input_spec.tensor then
---            tensor = input_spec.tensor
---        else
---            tensor = torch.rand(table.unpack(input_spec.input_dims)):float()
---        end
-        tensor = torch.Tensor(1, 3, 256, 256)
-        s = tensor:storage()
-        for i=1,s:size() do -- fill up the Storage
-          s[i] = 1
+        if input_spec.tensor then
+            tensor = input_spec.tensor
+        else
+            tensor = torch.rand(table.unpack(input_spec.input_dims)):float()
         end
+--        tensor = torch.Tensor(1, 3, 256, 256)
+--        s = tensor:storage()
+--        for i=1,s:size() do -- fill up the Storage
+--          s[i] = 1
+--        end
 --        print("tensor input : ", tensor)
         table.insert(inputs, {name=input_spec.name, tensor=tensor})
     end
