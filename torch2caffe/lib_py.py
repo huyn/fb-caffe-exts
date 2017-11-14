@@ -188,6 +188,7 @@ def load(opts):
             print(net.params[name][0].data[0][1][0][0])
             print(net.params[name][0].data)
             print("======================")
+            print(len(net.params[name]))
             print(len(data))
             print(len(data[0]))
             print(len(data[0][0]))
