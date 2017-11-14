@@ -62,7 +62,8 @@ local function debug_nets(caffe_net, torch_net)
                 --logging.infof("Layer %s, %s, Sum: %s", torch.typename(m), sizes, sums)
 --                print(("Layer %s, %s, Sum: %s").format(torch.typename(m), sizes, sums))
                 print(torch.typename(m))
-                print(sizes)
+--                print(sizes)
+                print(m.output)
                 print(sums)
             end
         end
@@ -155,11 +156,11 @@ function M.compare(opts, torch_net)
 
     print("compare...9")
     for i = 1,#caffe_outputs do
-        print(i)
+--        print(i)
         local torch_output = torch_outputs[i]
         local caffe_output = caffe_outputs[i]
         --logging.infof("Caffe norm: %s, Torch norm: %s", torch.norm(caffe_output), torch.norm(torch_output))
-        print(caffe_output)
+--        print(caffe_output)
         print("Caffe norm: %s, Torch norm: %s", torch.norm(caffe_output), torch.norm(torch_output))
         if not caffe_output:isSameSizeAs(torch_output) then
             --logging.errorf("Inconsistent output size: Caffe: %s, Torch: %s", caffe_output:size(), torch_output:size())
