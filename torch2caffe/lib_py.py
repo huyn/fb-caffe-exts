@@ -182,34 +182,34 @@ def load(opts):
         # print(net.params[name])
         if name == "ConvNdBackward1":
             print_all(net.params[name])
-            data = net.params[name][0].data
-            bias = net.params[name][1].data
-            print(net.params[name][0].data[1][0][0][0])
-            print(net.params[name][0].data[0][1][0][0])
-            print(net.params[name][0].data)
-            print("======================")
-            print(len(net.params[name]))
-            print(len(data))
-            print(len(data[0]))
-            print(len(data[0][0]))
-            print(len(data[0][0][0]))
-            i1 = len(data)
-            i2 = len(data[0])
-            i3 = len(data[0][0])
-            i4 = len(data[0][0][0])
-            print(len(bias))
+            # data = net.params[name][0].data
+            # bias = net.params[name][1].data
+            # print(net.params[name][0].data[1][0][0][0])
+            # print(net.params[name][0].data[0][1][0][0])
+            # print(net.params[name][0].data)
+            # print("======================")
+            # print(len(net.params[name]))
+            # print(len(data))
+            # print(len(data[0]))
+            # print(len(data[0][0]))
+            # print(len(data[0][0][0]))
+            # i1 = len(data)
+            # i2 = len(data[0])
+            # i3 = len(data[0][0])
+            # i4 = len(data[0][0][0])
+            # print(len(bias))
             # net.params[name][0].data = [[[[1] * i4] * i3] * i2] * i1
             # net.params[name][1].data = [0] * len(bias)
-            for j1 in range(0, i1):
-                for j2 in range(0, i2):
-                    for j3 in range(0, i3):
-                        for j4 in range(0, i4):
-                            net.params[name][0].data[j1][j2][j3][j4] = 1
-            for m in range(0, len(bias)):
-                net.params[name][1].data[m] = 0
-            print("after revalue")
-            print(net.params[name][0].data)
-            print(net.params[name][1].data)
+            # for j1 in range(0, i1):
+            #     for j2 in range(0, i2):
+            #         for j3 in range(0, i3):
+            #             for j4 in range(0, i4):
+            #                 net.params[name][0].data[j1][j2][j3][j4] = 1
+            # for m in range(0, len(bias)):
+            #     net.params[name][1].data[m] = 0
+            # print("after revalue")
+            # print(net.params[name][0].data)
+            # print(net.params[name][1].data)
             # print(net.params[name][1].data)
             # print(net.params[name][0].diff)
     return net
