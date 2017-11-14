@@ -45,9 +45,9 @@ local function debug_nets(caffe_net, torch_net)
     py.reval(t2c.debug_net(caffe_net))
     torch_net:apply(
         function(m)
-            print("debug torch")
+--            print("debug torch")
             if m.output then
-                print("print torch_net.output")
+--                print("print torch_net.output")
                 local sizes = {}
                 local sums = {}
                 if type(m.output) == 'table' then
