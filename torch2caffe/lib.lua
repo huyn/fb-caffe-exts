@@ -61,10 +61,10 @@ local function debug_nets(caffe_net, torch_net)
                 end
                 --logging.infof("Layer %s, %s, Sum: %s", torch.typename(m), sizes, sums)
 --                print(("Layer %s, %s, Sum: %s").format(torch.typename(m), sizes, sums))
---                print(torch.typename(m))
+                print(torch.typename(m))
 --                print(sizes)
 --                print(m.output)
---                print(sums)
+                print(sums)
             end
         end
     )
