@@ -353,7 +353,7 @@ function M.main(opts)
         model = g_t2c_preprocess(model, opts)
     end
 
-    opts.imgpath = "test.jpg"
+    opts.imgpath = "chicago.jpg"
     opts.out_path = "torch.jpg"
     opts.image_size = 256
     local dims = {"1", "3", "256", "256"}
