@@ -97,7 +97,7 @@ function M.compare(opts, torch_net)
         -- input a image
         local img = image.load(opts.imgpath, 3)
         if opts.image_size > 0 then
-          img = image.scale(img, opts.image_size)
+          img = image.scale(img, opts.image_size, opts.image_size, 'bilinear')
         end
         local H, W = img:size(2), img:size(3)
         print("size")
