@@ -131,6 +131,9 @@ function M.median_filter(img, r)
   u = u:unfold(3, r, 1):contiguous()
   local HH, WW = u:size(2), u:size(3)
   local dtype = u:type()
+  print("median_filter")
+  print(HH)
+  print(WW)
   -- Median is not defined for CudaTensors, cast to float and back
   local med = u:view(3, HH, WW, r * r):float():median():type(dtype)
   return med[{{}, {}, {}, 1}]
