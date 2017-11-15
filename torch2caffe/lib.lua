@@ -96,8 +96,8 @@ function M.compare(opts, torch_net)
 
         -- input a image
         local img = image.load(opts.imgpath, 3)
-        if opt.image_size > 0 then
-          img = image.scale(img, opt.image_size)
+        if opts.image_size > 0 then
+          img = image.scale(img, opts.image_size)
         end
         local H, W = img:size(2), img:size(3)
         tensor = img:view(1, 3, H, W)
@@ -338,6 +338,7 @@ function M.main(opts)
     end
 
     opts.imgpath = "test.jpg"
+    opts.image_size = 256
     local dims = {"1", "3", "256", "256"}
     if not opts.inputs then
         -- opts.inputs = {{name="data", input_dims=opts.input_dims}}
