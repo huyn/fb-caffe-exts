@@ -106,18 +106,20 @@ end
 function transfer.load_model(model_code)
     local model_path = paths.concat(transfer.model_base_path, model_code .. '.t7')
     local net = torch.load(model_path)
-    if net.forwardnodes then
-        for i = 1, #net.forwardnodes do
-            if net.forwardnodes[i].data.module then
-                net.forwardnodes[i].data.module:cuda()
-            end
-        end
-    end
-    net:apply(function(m) if m.weight then
-        m.gradWeight = m.weight:clone():zero();
-        m.gradBias = m.bias:clone():zero();
-    end
-    end)
+--    net:cuda()
+--    if net.forwardnodes then
+--        for i = 1, #net.forwardnodes do
+--            if net.forwardnodes[i].data.module then
+--                net.forwardnodes[i].data.module:cuda()
+--            end
+--        end
+--    end
+--    net:apply(function(m) if m.weight then
+--        m.gradWeight = m.weight:clone():zero();
+--        m.gradBias = m.bias:clone():zero();
+--    end
+--    end)
+    net:float()
     return net
 end
 
