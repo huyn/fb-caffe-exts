@@ -18,6 +18,9 @@ require 'fbtorch'
 local torch_layers = require 'torch2caffe.torch_layers'
 local t2c = py.import('torch2caffe.lib_py')
 
+local utils = require 'style_transfer.utils'
+local preprocess = require 'style_transfer.preprocess'
+
 function M.evaluate_caffe(caffe_net, inputs)
     local input_kwargs = {}
     for i=1,#inputs do
@@ -191,7 +194,9 @@ function M.compare(opts, torch_net)
 --        if not path.isdir(out_dir) then
 --          paths.mkdir(out_dir)
 --        end
-        image.save(opts.out_path, torch_output)
+
+        local img_out = utils.median_filter(torch_output, 3)
+        image.save(opts.out_path, img_out)
 
         local max_absolute_error = (caffe_output - torch_output):abs():max()
         --logging.infof("Maximum difference between Caffe and Torch output: %s", max_absolute_error)
