@@ -115,7 +115,8 @@ function transfer.load_model(model_code)
 --        m.gradBias = m.bias:clone():zero();
 --    end
 --    end)
-    net:float()
+
+--    net:float()
     return net
 end
 
