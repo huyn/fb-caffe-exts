@@ -100,6 +100,9 @@ function M.compare(opts, torch_net)
           img = image.scale(img, opts.image_size)
         end
         local H, W = img:size(2), img:size(3)
+        print("size")
+        print(H)
+        print(W)
         tensor = img:view(1, 3, H, W)
 
         table.insert(inputs, {name=input_spec.name, tensor=tensor})
