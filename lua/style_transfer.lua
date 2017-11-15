@@ -12,6 +12,9 @@ require 'InstanceNormalization'
 local transfer = {}
 local perm = torch.LongTensor { 3, 2, 1 }
 
+local dtype = 'torch.FloatTensor'
+
+
 local net_model = {}
 net_model[1] = {}
 net_model[2] = {}
@@ -60,7 +63,7 @@ function transfer.transfer_single_image(json)
     local padding_size_y = json.max_length
     local pad_pixel_x = math.floor((padding_size_x - new_dim_x) / 2)
     local pad_pixel_y = math.floor((padding_size_y - new_dim_y) / 2)
-    local pad_square = nn.SpatialReflectionPadding(pad_pixel_y, padding_size_y - new_dim_y - pad_pixel_y, pad_pixel_x, padding_size_x - new_dim_x - pad_pixel_x)
+    local pad_square = nn.SpatialReflectionPadding(pad_pixel_y, padding_size_y - new_dim_y - pad_pixel_y, pad_pixel_x, padding_size_x - new_dim_x - pad_pixel_x):type(dtype)
     local img_padding = pad_square:forward(image_input)
 
 
@@ -115,8 +118,7 @@ function transfer.load_model(model_code)
 --        m.gradBias = m.bias:clone():zero();
 --    end
 --    end)
-
---    net:float()
+    net:float()
     return net
 end
 
