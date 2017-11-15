@@ -9,6 +9,7 @@ of patent rights can be found in the PATENTS file in the same directory.
 local M = {}
 
 require 'nn'
+require 'image'
 
 local pl = require 'pl.import_into'()
 local py = require 'fb.python'
@@ -78,19 +79,29 @@ function M.compare(opts, torch_net)
     print("compare...1")
     local inputs = {}
     for i=1,#opts.inputs do
-        local input_spec = opts.inputs[i]
-        local tensor
-        if input_spec.tensor then
-            tensor = input_spec.tensor
-        else
-            tensor = torch.rand(table.unpack(input_spec.input_dims)):float()
-        end
+--        local input_spec = opts.inputs[i]
+--        local tensor
+--        if input_spec.tensor then
+--            tensor = input_spec.tensor
+--        else
+--            tensor = torch.rand(table.unpack(input_spec.input_dims)):float()
+--        end
+
 --        tensor = torch.Tensor(1, 3, 256, 256)
 --        s = tensor:storage()
 --        for i=1,s:size() do -- fill up the Storage
 --          s[i] = 1
 --        end
 --        print("tensor input : ", tensor)
+
+        -- input a image
+        local img = image.load(opts.imgpath, 3)
+        if opt.image_size > 0 then
+          img = image.scale(img, opt.image_size)
+        end
+        local H, W = img:size(2), img:size(3)
+        tensor = img:view(1, 3, H, W)
+
         table.insert(inputs, {name=input_spec.name, tensor=tensor})
     end
 
@@ -326,6 +337,7 @@ function M.main(opts)
         model = g_t2c_preprocess(model, opts)
     end
 
+    opts.imgpath = "test.jpg"
     local dims = {"1", "3", "256", "256"}
     if not opts.inputs then
         -- opts.inputs = {{name="data", input_dims=opts.input_dims}}
