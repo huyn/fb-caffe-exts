@@ -37,7 +37,6 @@ function transfer.transfer_single_image(json)
     else
         gpu_id = 1
     end
-    cutorch.setDevice(gpu_id)
     if json.max_length or false then
         json.max_length = tonumber(json.max_length)
     else
@@ -100,7 +99,7 @@ function transfer.transfer_single_image(json)
     --net = nil
     collectgarbage()
     collectgarbage()
-    return { code = '00', gpu_id = cutorch.getDevice() }
+    return { code = '00' }
 end
 
 
