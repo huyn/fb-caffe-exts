@@ -1,6 +1,9 @@
 require 'torch'
 require 'nn'
 require 'optim'
+require 'cutorch'
+require 'cudnn'
+require 'cunn'
 require 'image'
 require 'nngraph'
 local utils = require 'utils'
@@ -12,7 +15,7 @@ require 'InstanceNormalization'
 local transfer = {}
 local perm = torch.LongTensor { 3, 2, 1 }
 
-local dtype = 'torch.FloatTensor'
+local dtype = 'torch.CudaTensor'
 
 
 local net_model = {}
@@ -37,6 +40,7 @@ function transfer.transfer_single_image(json)
     else
         gpu_id = 1
     end
+    cutorch.setDevice(gpu_id)
     if json.max_length or false then
         json.max_length = tonumber(json.max_length)
     else
@@ -56,6 +60,7 @@ function transfer.transfer_single_image(json)
     local image_input__ = image_input
     image_input = image_input:index(1, perm)
     image_input:resize(1, image_input:size()[1], image_input:size()[2], image_input:size()[3])
+    image_input = image_input:cuda()
 
     image_input:mul(2):add(-1)
 
@@ -98,27 +103,26 @@ function transfer.transfer_single_image(json)
     --net = nil
     collectgarbage()
     collectgarbage()
-    return { code = '00' }
+    return { code = '00', gpu_id = cutorch.getDevice() }
 end
 
 
 function transfer.load_model(model_code)
     local model_path = paths.concat(transfer.model_base_path, model_code .. '.t7')
     local net = torch.load(model_path)
---    net:cuda()
---    if net.forwardnodes then
---        for i = 1, #net.forwardnodes do
---            if net.forwardnodes[i].data.module then
---                net.forwardnodes[i].data.module:cuda()
---            end
---        end
---    end
---    net:apply(function(m) if m.weight then
---        m.gradWeight = m.weight:clone():zero();
---        m.gradBias = m.bias:clone():zero();
---    end
---    end)
-    net:float()
+    net:cuda()
+    if net.forwardnodes then
+        for i = 1, #net.forwardnodes do
+            if net.forwardnodes[i].data.module then
+                net.forwardnodes[i].data.module:cuda()
+            end
+        end
+    end
+    net:apply(function(m) if m.weight then
+        m.gradWeight = m.weight:clone():zero();
+        m.gradBias = m.bias:clone():zero();
+    end
+    end)
     return net
 end
 

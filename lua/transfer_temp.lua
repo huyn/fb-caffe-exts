@@ -9,7 +9,7 @@ end
 
 
 function temp.crop_size_mult(model_code)
-    return 1
+    return 2
 end
 
 return temp
