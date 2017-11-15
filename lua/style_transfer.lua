@@ -56,7 +56,6 @@ function transfer.transfer_single_image(json)
     local image_input__ = image_input
     image_input = image_input:index(1, perm)
     image_input:resize(1, image_input:size()[1], image_input:size()[2], image_input:size()[3])
-    image_input = image_input:cuda()
 
     image_input:mul(2):add(-1)
 
