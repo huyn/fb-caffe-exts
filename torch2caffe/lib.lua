@@ -185,6 +185,14 @@ function M.compare(opts, torch_net)
             error("Inconsistent output sizes")
         end
 
+        --save torch output
+        print('Writing output image to ' .. opts.out_path)
+--        local out_dir = paths.dirname(out_path)
+--        if not path.isdir(out_dir) then
+--          paths.mkdir(out_dir)
+--        end
+        image.save(opts.out_path, torch_output)
+
         local max_absolute_error = (caffe_output - torch_output):abs():max()
         --logging.infof("Maximum difference between Caffe and Torch output: %s", max_absolute_error)
         print("Maximum difference between Caffe and Torch output: %s", max_absolute_error)
@@ -341,6 +349,7 @@ function M.main(opts)
     end
 
     opts.imgpath = "test.jpg"
+    opts.out_path = "torch.jpg"
     opts.image_size = 256
     local dims = {"1", "3", "256", "256"}
     if not opts.inputs then
