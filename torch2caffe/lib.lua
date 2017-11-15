@@ -79,8 +79,8 @@ function M.compare(opts, torch_net)
     print("compare...1")
     local inputs = {}
     for i=1,#opts.inputs do
---        local input_spec = opts.inputs[i]
---        local tensor
+        local input_spec = opts.inputs[i]
+        local tensor
 --        if input_spec.tensor then
 --            tensor = input_spec.tensor
 --        else
