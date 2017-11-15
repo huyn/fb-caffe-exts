@@ -19,7 +19,7 @@ def print_all(obj):
 #设置当前目录
 caffe_root = '/home/huyaonan/caffe/python'
 model_path = '/home/huyaonan/fb-caffe-exts/'
-sys.path.insert(0, caffe_root)
+# sys.path.insert(0, caffe_root)
 
 net_file=model_path + 's528_nn/s528_nn.prototxt'
 caffe_model=model_path + 's528_nn/s528_nn.caffemodel'
