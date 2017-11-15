@@ -18,8 +18,8 @@ require 'fbtorch'
 local torch_layers = require 'torch2caffe.torch_layers'
 local t2c = py.import('torch2caffe.lib_py')
 
-local utils = require 'style_transfer.utils'
-local preprocess = require 'style_transfer.preprocess'
+local utils = require 'torch2caffe.utils'
+local preprocess = require 'torch2caffe.preprocess'
 
 function M.evaluate_caffe(caffe_net, inputs)
     local input_kwargs = {}
