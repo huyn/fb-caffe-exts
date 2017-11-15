@@ -106,7 +106,6 @@ end
 function transfer.load_model(model_code)
     local model_path = paths.concat(transfer.model_base_path, model_code .. '.t7')
     local net = torch.load(model_path)
-    net:cuda()
     if net.forwardnodes then
         for i = 1, #net.forwardnodes do
             if net.forwardnodes[i].data.module then
