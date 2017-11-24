@@ -189,14 +189,9 @@ function M.compare(opts, torch_net)
         end
 
         --save torch output
-        print('Writing output image to ' .. opts.out_path)
---        local out_dir = paths.dirname(out_path)
---        if not path.isdir(out_dir) then
---          paths.mkdir(out_dir)
---        end
-
-        local img_out = utils.median_filter(torch_output, 3)
-        image.save(opts.out_path, img_out)
+--        print('Writing output image to ' .. opts.out_path)
+--        local img_out = utils.median_filter(torch_output, 3)
+--        image.save(opts.out_path, img_out)
 
         local max_absolute_error = (caffe_output - torch_output):abs():max()
         --logging.infof("Maximum difference between Caffe and Torch output: %s", max_absolute_error)
