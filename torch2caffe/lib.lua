@@ -177,11 +177,11 @@ function M.compare(opts, torch_net)
         local torch_output = torch_outputs[i]
         local caffe_output = caffe_outputs[i]
         --logging.infof("Caffe norm: %s, Torch norm: %s", torch.norm(caffe_output), torch.norm(torch_output))
---        print("caffe output")
---        print(caffe_output)
---        print("torch output")
---        print(torch_output)
-        print("Caffe norm: %s, Torch norm: %s", torch.norm(caffe_output), torch.norm(torch_output))
+        print("caffe output**************")
+        print(caffe_output)
+        print("torch output**************")
+        print(torch_output)
+        print("Caffe norm: ", torch.norm(caffe_output), "  Torch norm: ", torch.norm(torch_output))
         if not caffe_output:isSameSizeAs(torch_output) then
             --logging.errorf("Inconsistent output size: Caffe: %s, Torch: %s", caffe_output:size(), torch_output:size())
             error(string.format("Inconsistent output size: Caffe: %s, Torch: %s", caffe_output:size(), torch_output:size()))
@@ -195,7 +195,7 @@ function M.compare(opts, torch_net)
 
         local max_absolute_error = (caffe_output - torch_output):abs():max()
         --logging.infof("Maximum difference between Caffe and Torch output: %s", max_absolute_error)
-        print("Maximum difference between Caffe and Torch output: %s", max_absolute_error)
+        print("Maximum difference between Caffe and Torch output: ", max_absolute_error)
         if (max_absolute_error > 0.001) then
             debug_nets(caffe_net, torch_net)
             if os.getenv('LUA_DEBUG_ON_ERROR') then

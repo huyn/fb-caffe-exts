@@ -178,10 +178,10 @@ def print_all(obj):
 def load(opts):
     net = caffe.Net(opts["prototxt"], opts["caffemodel"], caffe.TEST)
     assert net, "Net is none?"
-    for name in net._layer_names:
+    # for name in net._layer_names:
         # print(net.params[name])
-        if name == "ConvNdBackward1":
-            print_all(net.params[name])
+        # if name == "ConvNdBackward1":
+            # print_all(net.params[name])
             # data = net.params[name][0].data
             # bias = net.params[name][1].data
             # print(net.params[name][0].data[1][0][0][0])
